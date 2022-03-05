@@ -11,17 +11,44 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [phi3,phi4,dphi3,dphi4,ddphi3,ddphi4] = kinematics_4bar(r1,r2,r3,r4,phi1,phi2,dphi2,ddphi2,phi3_init,phi4_init,t,fig_kin_4bar)
+function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar)
 
 % allocation of the result vectors (this results in better performance because we don't have to reallocate and
 % copy the vector each time we add an element.
+% phi1 is hoek met de wereld (keuze assenstelsel)
+% phi2 is aandrijving (gekend) en heeft snelheid en versnelling
 phi3 = zeros(size(t));
 phi4 = zeros(size(t));
+phi5 = zeros(size(t));
+phi6 = zeros(size(t));
+phi7 = zeros(size(t));
+phi8 = zeros(size(t));
+phi9 = zeros(size(t));
+phi10 = zeros(size(t));
+phi11 = zeros(size(t));
+phi = [0,0,phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11]; % eerst 2 nullen voor mooie indexering
+
 dphi3 = zeros(size(t));
 dphi4 = zeros(size(t));
+dphi5 = zeros(size(t));
+dphi6 = zeros(size(t));
+dphi7 = zeros(size(t));
+dphi8 = zeros(size(t));
+dphi9 = zeros(size(t));
+dphi10 = zeros(size(t));
+dphi11 = zeros(size(t));
+dphi = [0,0,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11];
+
 ddphi3 = zeros(size(t));
 ddphi4 = zeros(size(t));
-
+ddphi5 = zeros(size(t));
+ddphi6 = zeros(size(t));
+ddphi7 = zeros(size(t));
+ddphi8 = zeros(size(t));
+ddphi9 = zeros(size(t));
+ddphi10 = zeros(size(t));
+ddphi11 = zeros(size(t));
+ddphi = [0,0,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11];
 % fsolve options (help fsolve, help optimset)
 optim_options = optimset('Display','off');
 
@@ -41,7 +68,7 @@ for k=1:t_size
     % argument a1 ... phi1: constants
     % return value x: solution for the unknown angles phi3 and phi4
     % return exitflag: indicates convergence of algorithm
-    [x, fval, exitflag]=fsolve('loop_closure_eqs',[phi3_init phi4_init]',optim_options,phi2(k),r1,r2,r3,r4,phi1);
+    [x, fval, exitflag]=fsolve('loop_closure_eqs',phi_init,optim_options,phi2(k),STANGEN);
     if (exitflag ~= 1)
         display 'The fsolve exit flag was not 1, probably no convergence!'
         exitflag

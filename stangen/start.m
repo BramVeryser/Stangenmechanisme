@@ -21,31 +21,42 @@ close all
 
 % program data
 fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
-fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
+fig_dyn_4bar = 0;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
-r1 = 0.1397;
-r2 = 0.0508;
-r3 = 0.1524;
-r4 = 0.0762;
+AC = [-2.81, 3.01];     AG=[0,-4.67]; % deze zijn coordinaten tov A, al de rest zijn lengtes
+AB =2.67;
+BD=3.53;
+CK=8.36;                DE=1.43;        DC=3.47;
+DF=8.25;
+GH=16.21;               Fp=0.57;        GFp=11.82;
+HI=6.79;        
+KM=24.53;               Lp=2.07;        Ip=4.21;
+                        KLp=16.63;      KIp=10.39;  
+JN=6.53;
+NO=4.94;
+OP=6.11;
+STANGEN = [AB;BD;CK;DE;DC;DF;GH;Fp;GFp;HI;KM;Lp;Ip;KLp;KIp;JN;NO;OP;AC;AG];
 phi1 = 0;
 
-% dynamic parameters, defined in a local frame on each of the bars.
-X2 = r2/2;               % X coordinates of cog (centre of gravity)
-X3 = r3/2;
-X4 = r4/2;
-
-Y2 = 0;                  % Y coordinates of cog
-Y3 = 0.0102362;
-Y4 = 0;
-
-m2 = r2*1.76;
-m3 = r3*1.76;
-m4 = r4*0.54;
-
-J2 = m2*r2^2/12;
-J3 = m3*r3^2/12;
-J4 = m4*r4^2/12;
+%% dynamic parameters, defined in a local frame on each of the bars.
+% zwaartepunten nog te bepalen (uitgaan van helft van de stang lijkt mij
+% niet overal geldig)
+% X2 = r2/2;               % X coordinates of cog (centre of gravity)
+% X3 = r3/2;
+% X4 = r4/2;
+% 
+% Y2 = 0;                  % Y coordinates of cog
+% Y3 = 0.0102362;
+% Y4 = 0;
+% 
+% m2 = r2*1.76;
+% m3 = r3*1.76;
+% m4 = r4*0.54;
+% 
+% J2 = m2*r2^2/12;
+% J3 = m3*r3^2/12;
+% J4 = m4*r4^2/12;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,8 +64,16 @@ J4 = m4*r4^2/12;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % position analysis
-phi3_init = 0;    % initial condition for first step of position analysis with fsolve (phi3 and phi4)
-phi4_init = 0.2;  % VERY IMPORTANT because it determines which branch of the mechanism you're in
+phi3_init = pi;     % initial condition for first step of position analysis with fsolve (phi3 and phi4)
+phi4_init = 0.2;    % VERY IMPORTANT because it determines which branch of the mechanism you're in
+phi5_init = pi;     %  moeten we echt een starthoek hebben voor elke
+phi6_init = pi;     % stang?
+phi7_init = pi;
+phi8_init = pi;
+phi9_init = pi;
+phi10_init = pi;
+phi11_init = pi;
+phi_init=[phi1,0,phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init];
 
 t_begin = 0;                   % start time of simulation
 t_end = 10;                    % end time of simulation
@@ -64,12 +83,12 @@ t = [t_begin:Ts:t_end]';       % time vector
 % initialization of driver
 omega = 0.5;
 A = 1;
-phi2=1+A*sin(omega*t);
+phi2=1+A*sin(omega*t); %tussen welke 2 hoeken ligt onze phi2?
 dphi2=omega*A*cos(omega*t);
 ddphi2=-omega^2*A*sin(omega*t);
 
 % calculation of the kinematics (see kin_4bar.m)
-[phi3,phi4,dphi3,dphi4,ddphi3,ddphi4] = kinematics_4bar(r1,r2,r3,r4,phi1,phi2,dphi2,ddphi2,phi3_init,phi4_init,t,fig_kin_4bar);
+[phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar);
 %% tot hier voor eerste oefenzitting
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
