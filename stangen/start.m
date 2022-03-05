@@ -36,6 +36,7 @@ KM=24.53;               Lp=2.07;        Ip=4.21;
 JN=6.53;
 NO=4.94;
 OP=6.11;
+% TODO LO, JI, GF,EF definieren, afstanden tussen scharnieren op 1 stang
 STANGEN = [AB;BD;CK;DE;DC;DF;GH;Fp;GFp;HI;KM;Lp;Ip;KLp;KIp;JN;NO;OP;AC;AG];
 phi1 = 0;
 
