@@ -24,20 +24,29 @@ fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 0;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
-AC = [-2.81; 3.01];     AG=[0;-4.67]; % deze zijn coordinaten tov A, al de rest zijn lengtes
-AB =2.67;
-BD=3.53;
-CK=8.36;                DE=1.43;        DC=3.47;
-DF=8.25;
-GH=16.21;               Fp=0.57;        GFp=11.82;
-HI=6.79;        
-KM=24.53;               Lp=2.07;        Ip=4.21;
-                        KLp=16.63;      KIp=10.39;  
-JN=6.53;
-NO=4.94;
-OP=6.11;
+AC = [-2.818; 3.031];     AG=[0.376;-4.677]; % deze zijn coordinaten tov A, al de rest zijn lengtes
+
+AB =2.645; % stang 2
+
+BD=3.580; % stang 3
+
+CK=8.357;                Ep=1.413;        CD=3.215;         CEp=3.464; % stang 4
+
+EF=8.242; % stang 5
+
+GH=16.500;               Fp=0.578;        FpG=12.116; % stang 6
+
+HI=6.797;       IJ=1.3195;   % stang 7
+
+KM=24.525;               Lp8=2.184;        Ip=4.207;  KLp8=17.011;      IpK=10.394;  % stang 8
+
+JN=6.516;  % stang 9
+
+NO=4.9435;      Lp10=0.39032;       Lp10O=3.869;% stang 10
+
+OP=6.102; % stang 11
 % TODO LO, JI, GF,EF definieren, afstanden tussen scharnieren op 1 stang
-STANGEN = [AB;BD;CK;DE;DC;DF;GH;Fp;GFp;HI;KM;Lp;Ip;KLp;KIp;JN;NO;OP;AC;AG];
+STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG];
 phi1 = 0; %grondhoek
 
 %% dynamic parameters, defined in a local frame on each of the bars.
@@ -65,15 +74,15 @@ phi1 = 0; %grondhoek
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % position analysis
-phi3_init = pi;     % initial condition for first step of position analysis with fsolve (phi3 and phi4)
-phi4_init = 0.2;    % VERY IMPORTANT because it determines which branch of the mechanism you're in
-phi5_init = pi;     %  moeten we echt een starthoek hebben voor elke
-phi6_init = pi;     % stang?
-phi7_init = pi;
-phi8_init = pi;
-phi9_init = pi;
-phi10_init = pi;
-phi11_init = pi;
+phi3_init = 2.67884;     % initial condition for first step of position analysis with fsolve (phi3 and phi4)
+phi4_init = 3.49897;    % VERY IMPORTANT because it determines which branch of the mechanism you're in
+phi5_init = 4.04233;     %  moeten we echt een starthoek hebben voor elke
+phi6_init = 3.07687;     % stang?
+phi7_init = 2.58474;
+phi8_init = 3.53734;
+phi9_init = 3.56888;
+phi10_init = 4.59245;
+phi11_init = 3.31019;
 phi_init=[phi1,0,phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init];
 
 t_begin = 0;                   % start time of simulation
