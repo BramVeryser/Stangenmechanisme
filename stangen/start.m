@@ -24,7 +24,7 @@ fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 0;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
-AC = [-2.81, 3.01];     AG=[0,-4.67]; % deze zijn coordinaten tov A, al de rest zijn lengtes
+AC = [-2.81; 3.01];     AG=[0;-4.67]; % deze zijn coordinaten tov A, al de rest zijn lengtes
 AB =2.67;
 BD=3.53;
 CK=8.36;                DE=1.43;        DC=3.47;
@@ -38,7 +38,7 @@ NO=4.94;
 OP=6.11;
 % TODO LO, JI, GF,EF definieren, afstanden tussen scharnieren op 1 stang
 STANGEN = [AB;BD;CK;DE;DC;DF;GH;Fp;GFp;HI;KM;Lp;Ip;KLp;KIp;JN;NO;OP;AC;AG];
-phi1 = 0;
+phi1 = 0; %grondhoek
 
 %% dynamic parameters, defined in a local frame on each of the bars.
 % zwaartepunten nog te bepalen (uitgaan van helft van de stang lijkt mij
@@ -82,7 +82,7 @@ Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
 % initialization of driver
-omega = 0.5;
+omega = 0.5; %zelf berekenen door phi2 te meten
 A = 1;
 phi2=1+A*sin(omega*t); %tussen welke 2 hoeken ligt onze phi2?
 dphi2=omega*A*cos(omega*t);

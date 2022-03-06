@@ -27,6 +27,7 @@ phi9 = zeros(size(t));
 phi10 = zeros(size(t));
 phi11 = zeros(size(t));
 phi = [0,0,phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11]; % eerst 2 nullen voor mooie indexering
+%onbekende lengte 
 
 dphi3 = zeros(size(t));
 dphi4 = zeros(size(t));

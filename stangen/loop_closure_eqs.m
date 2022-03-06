@@ -43,17 +43,17 @@ phi11=phi_init(11);
 %loop closure equations:
 %lus 1: 1234-1
 F(1)=AB*cos(phi2)+BD*cos(phi3)-DC*cos(phi4)-ACx;
-F(2)=AB*sin(phi2)+BD*sin(phi3)-DC*sin(phi4)+ACy;
+F(2)=AB*sin(phi2)+BD*sin(phi3)-DC*sin(phi4)-ACy;
 %lus 2: 1654-1
-F(3)=GFp*cos(phi6)+Fp*cos(phi6-pi/2)+FE*cos(phi5)+ED*cos(phi5-pi/2)-CD*cos(phi4)-ACx +AGx;
-F(4)=GFp*sin(phi6)+Fp*sin(phi6-pi/2)+FE*sin(phi5)+ED*sin(phi5-pi/2)-CD*sin(phi4)-ACy +AGy;
+F(3)=GFp*cos(phi6)+Fp*cos(phi6-pi/2)-FE*cos(phi5)-ED*cos(phi4-pi/2)-CD*cos(phi4)-ACx +AGx; %ED->Ep
+F(4)=GFp*sin(phi6)+Fp*sin(phi6-pi/2)-FE*sin(phi5)-ED*sin(phi4-pi/2)-CD*sin(phi4)-ACy +AGy;
 %lus 3: 81011-8 % deze bevat extra onbekende PLp: schuiverafstand
-F(5)=LO*cos(phi10)+OP*cos(phi11) - PLp*cos(phi8)+Lp*cos(phi8-pi/2);
+F(5)=LO*cos(phi10)+OP*cos(phi11) - PLp*cos(phi8)+Lp*cos(phi8-pi/2);% extra Lp8 en Lp10
 F(6)=LO*sin(phi10)+OP*sin(phi11) - PLp*sin(phi8)+Lp*sin(phi8-pi/2);
 %lus 4: 81097-8
 F(7)=-LN*cos(phi10)-JN*cos(phi9) + JI*cos(phi7)+ IpLp*cos(phi8)+ (Lp-Ip)*cos(phi8-pi/2);
 F(8)=-LN*sin(phi10)-JN*sin(phi9) + JI*sin(phi7)+ IpLp*sin(phi8)+ (Lp-Ip)*sin(phi8-pi/2);
 %lus 5: 87654-8
-F(9)= HI*cos(phi7) + HFp*cos(phi6) + Fp*cos(phi6-phi/2)+ EF*cos(phi5)- KE*cos(phi4) +KIp*cos(phi8)+Ip*cos(phi8-pi/2);
-F(10)=HI*sin(phi7) + HFp*sin(phi6) + Fp*sin(phi6-phi/2)+ EF*sin(phi5)- KE*sin(phi4) +KIp*sin(phi8)+Ip*sin(phi8-pi/2);
+F(9)= -HI*cos(phi7) - HFp*cos(phi6) + Fp*cos(phi6-phi/2)- EF*cos(phi5)- KE*cos(phi4) +KIp*cos(phi8)+Ip*cos(phi8-pi/2);
+F(10)=-HI*sin(phi7) - HFp*sin(phi6) + Fp*sin(phi6-phi/2)- EF*sin(phi5)- KE*sin(phi4) +KIp*sin(phi8)+Ip*sin(phi8-pi/2);
 end 
