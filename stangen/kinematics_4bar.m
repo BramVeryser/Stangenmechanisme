@@ -76,22 +76,60 @@ for k=1:t_size
     end
     
     % save results of fsolve
+    % ! volgorde nagaan !!!
     phi3(k)=x(1);
     phi4(k)=x(2);
+    phi5(k)=x(3);
+    phi6(k)=x(4);
+    phi7(k)=x(5);
+    phi8(k)=x(6);
+    phi9(k)=x(7);
+    phi10(k)=x(8);
+    phi11(k)=x(9);
+    PLp(k)=x(10);
     
     
     % *** velocity analysis ***
-    
-    A = [-r3*sin(phi3(k)),  r4*sin(phi4(k));
-         r3*cos(phi3(k)), -r4*cos(phi4(k))];
-    B = [ r2*sin(phi2(k))*dphi2(k);
-         -r2*cos(phi2(k))*dphi2(k)];
+         %lus1
+    A = [-BD*sin(phi3), +CD*sin(phi4),zeros(1,8);
+         +BD*cos(phi3), -CD*cos(phi4),zeros(1,8);
+         %lus2
+         0,Ep*sin(phi4-pi/2)+CEp*sin(phi4),+EF*sin(phi5),-FpG*sin(phi6)-Fp*sin(phi6-pi/2), zeros(1,6);
+         0,-Ep*cos(phi4-pi/2)-CEp*cos(phi4),-EF*cos(phi5),+FpG*cos(phi6)+Fp*cos(phi6-pi/2), zeros(1,6);
+         %lus3
+         zeros(1,5),-Lp8*sin(phi8-pi/2)+PLp8*sin(phi8),+Lp10*sin(phi10-pi/2)-Lp10O*sin(phi10),-OP*sin(phi11)*dphi11,-cos(phi8);
+         zeros(1,5),Lp8*cos(phi8-pi/2)-PLp8*cos(phi8),-Lp10*cos(phi10-pi/2)+Lp10O*cos(phi10),+OP*cos(phi11)*dphi11,-sin(phi8);
+         %lus4
+         zeros(1,4),-IJ*sin(phi7)*dphi7,-Lp8*sin(phi8-pi/2)+Ip*sin(phi8-pi/2)-IpLp8*sin(phi8),+JN*sin(phi9),+Lp10*sin(phi10-pi/2)+Lp10N*sin(phi10),0,0;
+         zeros(1,4),+IJ*cos(phi7)*dphi7,Lp8*cos(phi8-pi/2)-Ip*cos(phi8-pi/2)+IpLp8*cos(phi8),-JN*cos(phi9),-Lp10*cos(phi10-pi/2)-Lp10N*cos(phi10),0,0;
+         %lus5
+         0,+Ep*sin(phi4-pi/2)-EpK*sin(phi4),EF*sin(phi5),FpH*sin(phi6)-Fp*sin(phi6-pi/2),HI*sin(phi7),-Ip*sin(phi8-pi/2)-IpK*sin(phi8),zeros(1,4);
+         0,-Ep*cos(phi4-pi/2)+EpK*cos(phi4),-EF*cos(phi5),-FpH*cos(phi6)+Fp*cos(phi6-pi/2),-HI*cos(phi7),Ip*cos(phi8-pi/2)+IpK*cos(phi8),zeros(1,4)];
+     
+    B = [ AB*sin(phi2)*dphi2;
+        -AB*cos(phi2)*dphi2;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0];
      
     x = A\B;
     
     % save results
-    dphi3(k) = x(1);
-    dphi4(k) = x(2);
+    dphi3(k)=x(1);
+    dphi4(k)=x(2);
+    dphi5(k)=x(3);
+    dphi6(k)=x(4);
+    dphi7(k)=x(5);
+    dphi8(k)=x(6);
+    dphi9(k)=x(7);
+    dphi10(k)=x(8);
+    dphi11(k)=x(9);
+    dPLp(k)=x(10);
     
     
     % *** acceleration analysis ***
