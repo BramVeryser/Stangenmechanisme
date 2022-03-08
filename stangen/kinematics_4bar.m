@@ -12,7 +12,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar)
+%initialisatie
+AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
+CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
+Fp= STANGEN(9);    FpG= STANGEN(10);    HI= STANGEN(11);    IJ= STANGEN(12);
+KM= STANGEN(13);    Lp8= STANGEN(14);   Ip= STANGEN(15);   KLp8= STANGEN(16);
+IpK= STANGEN(17);    JN= STANGEN(18);  NO=STANGEN(19);     Lp10=STANGEN(20);
+Lp10O=STANGEN(21);    OP=STANGEN(22);    ACx=STANGEN(23);    ACy=STANGEN(24);
+AGx=STANGEN(25);    AGy=STANGEN(26);
 
+Lp10N = NO - Lp10O;
+IpLp8 = KLp8 - IpK;
+FpH = GH - FpG;
+EpK = CK - CEp;
 % allocation of the result vectors (this results in better performance because we don't have to reallocate and
 % copy the vector each time we add an element.
 % phi1 is hoek met de wereld (keuze assenstelsel)
@@ -133,22 +145,65 @@ for k=1:t_size
     
     
     % *** acceleration analysis ***
+    %matrix A voor dynamica is A kin afleiden naar dphi, componenten
+    %afleiden naar phi moet in B staan (constanten)
+    A = [-BD*sin(phi3), +CD*sin(phi4),zeros(1,8);
+         +BD*cos(phi3), -CD*cos(phi4),zeros(1,8);
+         %lus2
+         0,Ep*sin(phi4-pi/2)+CEp*sin(phi4),+EF*sin(phi5),-FpG*sin(phi6)-Fp*sin(phi6-pi/2), zeros(1,6);
+         0,-Ep*cos(phi4-pi/2)-CEp*cos(phi4),-EF*cos(phi5),+FpG*cos(phi6)+Fp*cos(phi6-pi/2), zeros(1,6);
+         %lus3
+         zeros(1,5),-Lp8*sin(phi8-pi/2)+PLp8*sin(phi8),+Lp10*sin(phi10-pi/2)-Lp10O*sin(phi10),-OP*sin(phi11)*dphi11,-cos(phi8);
+         zeros(1,5),Lp8*cos(phi8-pi/2)-PLp8*cos(phi8),-Lp10*cos(phi10-pi/2)+Lp10O*cos(phi10),+OP*cos(phi11)*dphi11,-sin(phi8);
+         %lus4
+         zeros(1,4),-IJ*sin(phi7)*dphi7,-Lp8*sin(phi8-pi/2)+Ip*sin(phi8-pi/2)-IpLp8*sin(phi8),+JN*sin(phi9),+Lp10*sin(phi10-pi/2)+Lp10N*sin(phi10),0,0;
+         zeros(1,4),+IJ*cos(phi7)*dphi7,Lp8*cos(phi8-pi/2)-Ip*cos(phi8-pi/2)+IpLp8*cos(phi8),-JN*cos(phi9),-Lp10*cos(phi10-pi/2)-Lp10N*cos(phi10),0,0;
+         %lus5
+         0,+Ep*sin(phi4-pi/2)-EpK*sin(phi4),EF*sin(phi5),FpH*sin(phi6)-Fp*sin(phi6-pi/2),HI*sin(phi7),-Ip*sin(phi8-pi/2)-IpK*sin(phi8),zeros(1,4);
+         0,-Ep*cos(phi4-pi/2)+EpK*cos(phi4),-EF*cos(phi5),-FpH*cos(phi6)+Fp*cos(phi6-pi/2),-HI*cos(phi7),Ip*cos(phi8-pi/2)+IpK*cos(phi8),zeros(1,4)];
+
+     
+    B = [ AB*cos(phi2)*dphi2^2+AB*sin(phi2)*ddphi2-(-BD*cos(phi3)*dphi3 +CD*cos(phi4)*dphi4);
+        AB*sin(phi2)*dphi2^2--AB*cos(phi2)*ddphi2-( -BD*sin(phi3)*dphi3 +CD*sin(phi4)*dphi4);
+        %
+        -(Ep*cos(phi4-pi/2)*dphi4+CEp*cos(phi4)*dphi4+EF*cos(phi5)*dphi5-FpG*cos(phi6)*dphi6-Fp*cos(phi6-pi/2)*dphi6);
+        -(Ep*sin(phi4-pi/2)*dphi4+CEp*sin(phi4)*dphi4+EF*sin(phi5)*dphi5-FpG*sin(phi6)*dphi6-Fp*sin(phi6-pi/2)*dphi6);
+        %
+        -(-Lp8*cos(phi8-pi/2)*dphi8+PLp8*cos(phi8)*dphi8+Lp10*cos(phi10-pi/2)*dphi10-Lp10O*cos(phi10)*dphi10-OP*cos(phi11)*dphi11 +sin(phi8)*dphi8);
+        -(-Lp8*sin(phi8-pi/2)*dphi8+PLp8*sin(phi8)*dphi8+Lp10*sin(phi10-pi/2)*dphi10-Lp10O*sin(phi10)*dphi10-OP*sin(phi11)*dphi11 -cos(phi8)*dphi8);
+        %
+        -(-IJ*cos(phi7)*dphi7-Lp8*cos(phi8-pi/2)*dphi8+Ip*cos(phi8-pi/2)*dphi8-IpLp8*cos(phi8)*dphi8+JN*cos(phi9)*dphi9+Lp10*cos(phi10-pi/2)*dphi10+Lp10N*cos(phi10)*dphi10);
+        -(-IJ*sin(phi7)*dphi7-Lp8*sin(phi8-pi/2)*dphi8+Ip*sin(phi8-pi/2)*dphi8-IpLp8*sin(phi8)*dphi8+JN*sin(phi9)*dphi9+Lp10*sin(phi10-pi/2)*dphi10+Lp10N*sin(phi10)*dphi10);
+        %
+        -(+Ep*cos(phi4-pi/2)*dphi4-EpK*cos(phi4)*dphi4+EF*cos(phi5)*dphi5+FpH*cos(phi6)*dphi6-Fp*cos(phi6-pi/2)*dphi6+HI*cos(phi7)*dphi7-Ip*cos(phi8-pi/2)*dphi8-IpK*cos(phi8)*dphi8);
+        -(+Ep*sin(phi4-pi/2)*dphi4-EpK*sin(phi4)*dphi4+EF*sin(phi5)*dphi5+FpH*sin(phi6)*dphi6-Fp*sin(phi6-pi/2)*dphi6+HI*sin(phi7)*dphi7-Ip*sin(phi8-pi/2)*dphi8-IpK*sin(phi8)*dphi8)];
     
-    A = [-r3*sin(phi3(k)),  r4*sin(phi4(k));
-         r3*cos(phi3(k)), -r4*cos(phi4(k))];
-    B = [r2*cos(phi2(k))*dphi2(k)^2+r2*sin(phi2(k))*ddphi2(k)+r3*cos(phi3(k))*dphi3(k)^2-r4*cos(phi4(k))*dphi4(k)^2;
-         r2*sin(phi2(k))*dphi2(k)^2-r2*cos(phi2(k))*ddphi2(k)+r3*sin(phi3(k))*dphi3(k)^2-r4*sin(phi4(k))*dphi4(k)^2];
     
     x = A\B;
     % save results
-    ddphi3(k) = x(1);
-    ddphi4(k) = x(2);
+    ddphi3(k)=x(1);
+    ddphi4(k)=x(2);
+    ddphi5(k)=x(3);
+    ddphi6(k)=x(4);
+    ddphi7(k)=x(5);
+    ddphi8(k)=x(6);
+    ddphi9(k)=x(7);
+    ddphi10(k)=x(8);
+    ddphi11(k)=x(9);
+    ddPLp(k)=x(10);
     
     
     % *** calculate initial values for next iteration step ***
     phi3_init = phi3(k)+Ts*dphi3(k);
     phi4_init = phi4(k)+Ts*dphi4(k);
-    
+    phi5_init = phi5(k)+Ts*dphi5(k);
+    phi6_init = phi6(k)+Ts*dphi6(k);
+    phi7_init = phi7(k)+Ts*dphi7(k);
+    phi8_init = phi8(k)+Ts*dphi8(k);
+    phi9_init = phi9(k)+Ts*dphi9(k);
+    phi10_init = phi10(k)+Ts*dphi10(k);
+    phi11_init = phi11(k)+Ts*dphi11(k);
+    PLp_init = PLp(k)+Ts*dPLp(k);
     
 end % loop over positions
 
