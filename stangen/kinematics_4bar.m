@@ -38,7 +38,7 @@ phi8 = zeros(size(t));
 phi9 = zeros(size(t));
 phi10 = zeros(size(t));
 phi11 = zeros(size(t));
-phi = [0,0,phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11]; % eerst 2 nullen voor mooie indexering
+phi = [zeros(size(t)),zeros(size(t)),phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11]; % eerst 2 nullen voor mooie indexering
 %onbekende lengte 
 
 dphi3 = zeros(size(t));
@@ -50,7 +50,7 @@ dphi8 = zeros(size(t));
 dphi9 = zeros(size(t));
 dphi10 = zeros(size(t));
 dphi11 = zeros(size(t));
-dphi = [0,0,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11];
+dphi = [zeros(size(t)),zeros(size(t)),dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11];
 
 ddphi3 = zeros(size(t));
 ddphi4 = zeros(size(t));
@@ -61,7 +61,7 @@ ddphi8 = zeros(size(t));
 ddphi9 = zeros(size(t));
 ddphi10 = zeros(size(t));
 ddphi11 = zeros(size(t));
-ddphi = [0,0,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11];
+ddphi = [zeros(size(t)),zeros(size(t)),ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11];
 % fsolve options (help fsolve, help optimset)
 optim_options = optimset('Display','off');
 
