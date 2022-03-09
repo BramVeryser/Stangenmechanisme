@@ -45,8 +45,10 @@ JN=6.516;  % stang 9
 NO=4.9435;      Lp10=0.39032;       Lp10O=3.869;% stang 10
 
 OP=6.102; % stang 11
+% schaalfactor S
+S=1;
 % TODO LO, JI, GF,EF definieren, afstanden tussen scharnieren op 1 stang
-STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG];
+STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG]*S;
 phi1 = 0; %grondhoek
 
 %% dynamic parameters, defined in a local frame on each of the bars.
@@ -83,7 +85,8 @@ phi8_init = 3.53734;
 phi9_init = 3.56888;
 phi10_init = 4.59245;
 phi11_init = 3.31019;
-phi_init=[phi1,0,phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init];
+PLp8=7.514*S;
+phi_init=[phi1,0,phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8];
 
 t_begin = 0;                   % start time of simulation
 t_end = 10;                    % end time of simulation
