@@ -217,9 +217,11 @@ end % loop over positions
 % *** create movie ***
 
 % point P = fixed
-P = 0;
+A = 0;
+C = ACx + j*ACy;
+G = AGx + j*AGy;
 % point S = fixed
-S = r1*exp(j*phi1);
+
 % define which positions we want as frames in our movie
 frames = 40;    % number of frames in movie
 delta = floor(t_size/frames); % time between frames
@@ -229,10 +231,10 @@ index_vec = [1:delta:t_size]';
 % This is done by plotting a diagonal from (x_left, y_bottom) to (x_right, y_top), setting the
 % axes equal and saving the axes into "movie_axes", so that "movie_axes" can be used for further
 % plots.
-x_left = -1.5*r2;
-y_bottom = -1.5*max(r2,r4);
-x_right = r1+1.5*r4;
-y_top = 1.5*max(r2,r4);
+x_left = -40;
+y_bottom = -20;
+x_right = 5;
+y_top = 20;
 
 figure(10)
 hold on
@@ -243,16 +245,43 @@ movie_axes = axis;   %save current axes into movie_axes
 % draw and save movie frame
 for m=1:length(index_vec)
     index = index_vec(m);
-    Q = P + r2 * exp(j*phi2(index));
-    R1 = Q + r3 * exp(j*phi3(index));
-    R2 = S + r4 * exp(j*phi4(index));
+    B = A + AB * exp(j*phi2(index));
+    D = B + BD * exp(j*phi3(index));
     
-    loop1 = [P Q R1 R2 S];
+    Fv = G + FpG * exp(j*phi6(index));
+    F = Fv + Fp * exp(j*(phi6(index)-pi/2));
+    E = F - EF * exp(j*phi5(index));
+    Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+    
+    K = Ev + (CK-CEp) * exp(j*phi4(index));
+    Iv = K + IpK * exp(j*phi8(index));
+    I = Iv + Ip * exp(j*(phi8(index)-pi/2));
+    H = Fv + (GH-FpG) * exp(j*phi6(index));
+    Lv8 = K + KLp8 * exp(j*phi8(index));
+    L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
+    Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+    
+    J = H + (HI - IJ) * exp(j*phi7(index));
+    N = J + JN * exp(j*phi9(index));
+    O = N + NO * exp(j*phi10(index));
+    P = O + OP * exp(j*phi11(index));
+    
+    
+    loop1 = [A B D C];
+    loop2 = [G Fv F E Ev C];
+    loop3 = [Lv8 L Lv10 O P];
+    loop4 = [Lv8 L Lv10 N J I Iv];
+    loop5 = [Iv I H Fv F E Ev K];
     
     figure(10)
     clf
     hold on
     plot(real(loop1),imag(loop1),'-o')
+    hold on 
+    plot(real(loop2),imag(loop2),'-o')
+    plot(real(loop3),imag(loop3),'-o')
+    plot(real(loop4),imag(loop4),'-o')
+    plot(real(loop5),imag(loop5),'-o')
     
     axis(movie_axes);     % set axes as in movie_axes
     Movie(m) = getframe;  % save frame to a variable Film
@@ -269,54 +298,80 @@ if fig_kin_4bar
     
     %plot assembly at a certain timestep 
     index = 1; %select 1st timestep
-    P = 0;
-    S = r1*exp(j*phi1);
-    Q = P + r2 * exp(j*phi2(index));
-    R = Q + r3 * exp(j*phi3(index));
+   
+    B = A + AB * exp(j*phi2(index));
+    D = B + BD * exp(j*phi3(index));
     
-    figure
-    assembly=[P, Q, R, S];
-    plot(real(assembly),imag(assembly),'ro-')
+    Fv = G + FpG * exp(j*phi6(index));
+    F = Fv + Fp * exp(j*(phi6(index)-pi/2));
+    E = F - EF * exp(j*phi5(index));
+    Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+    
+    K = Ev + (CK-CEp) * exp(j*phi4(index));
+    Iv = K + IpK * exp(j*phi8(index));
+    I = Iv + Ip * exp(j*(phi8(index)-pi/2));
+    H = Fv + (GH-FpG) * exp(j*phi6(index));
+    Lv8 = K + KLp8 * exp(j*phi8(index));
+    L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
+    Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+    
+    J = H + (HI - IJ) * exp(j*phi7(index));
+    N = J + JN * exp(j*phi9(index));
+    O = N + NO * exp(j*phi10(index));
+    P = O + OP * exp(j*phi11(index));
+    
+    figure()
+    loop1 = [A B D C];
+    loop2 = [G Fv F E Ev C];
+    loop3 = [Lv8 L Lv10 O P];
+    loop4 = [Lv8 L Lv10 N J I Iv];
+    loop5 = [Iv I H Fv F E Ev K];
+    plot(real(loop1),imag(loop1),'ro-')
+    hold on
+    plot(real(loop2),imag(loop2),'ro-')
+    plot(real(loop3),imag(loop3),'ro-')
+    plot(real(loop4),imag(loop4),'ro-')
+    plot(real(loop5),imag(loop5),'ro-')
     xlabel('[m]')
     ylabel('[m]')
     title('assembly')
     axis equal
     
-    figure
-    subplot(311)
-    plot(t,phi2)
-    ylabel('\phi_2 [rad]')
-    subplot(312)
-    plot(t,phi3)
-    ylabel('\phi_3 [rad]')
-    subplot(313)
-    plot(t,phi4)
-    ylabel('\phi_4 [rad]')
-    xlabel('t [s]')
-    
-    figure
-    subplot(311)
-    plot(t,dphi2)
-    ylabel('d\phi_2 [rad/s]')
-    subplot(312)
-    plot(t,dphi3)
-    ylabel('d\phi_3 [rad/s]')
-    subplot(313)
-    plot(t,dphi4)
-    ylabel('d\phi_4 [rad/s]')
-    xlabel('t [s]')
-    
-    figure
-    subplot(311)
-    plot(t,ddphi2)
-    ylabel('dd\phi_2 [rad/s^2]')
-    subplot(312)
-    plot(t,ddphi3)
-    ylabel('dd\phi_3 [rad/s^2]')
-    subplot(313)
-    plot(t,ddphi4)
-    ylabel('dd\phi_4 [rad/s^2]')
-    xlabel('t [s]')
+%     figure
+%     subplot(311)
+%     plot(t,phi2)
+%     ylabel('\phi_2 [rad]')
+%     subplot(312)
+%     plot(t,phi3)
+%     ylabel('\phi_3 [rad]')
+%     subplot(313)
+%     plot(t,phi4)
+%     ylabel('\phi_4 [rad]')
+%     xlabel('t [s]')
+%     
+%     figure
+%     subplot(311)
+%     plot(t,dphi2)
+%     ylabel('d\phi_2 [rad/s]')
+%     subplot(312)
+%     plot(t,dphi3)
+%     ylabel('d\phi_3 [rad/s]')
+%     subplot(313)
+%     plot(t,dphi4)
+%     ylabel('d\phi_4 [rad/s]')
+%     xlabel('t [s]')
+%     
+%     figure
+%     subplot(311)
+%     plot(t,ddphi2)
+%     ylabel('dd\phi_2 [rad/s^2]')
+%     subplot(312)
+%     plot(t,ddphi3)
+%     ylabel('dd\phi_3 [rad/s^2]')
+%     subplot(313)
+%     plot(t,ddphi4)
+%     ylabel('dd\phi_4 [rad/s^2]')
+%     xlabel('t [s]')
 end
 
 
