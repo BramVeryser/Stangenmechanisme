@@ -118,8 +118,8 @@ for k=1:t_size
          0,+Ep*sin(phi4(k)-pi/2)-EpK*sin(phi4(k)),EF*sin(phi5(k)),FpH*sin(phi6(k))-Fp*sin(phi6(k)-pi/2),HI*sin(phi7(k)),-Ip*sin(phi8(k)-pi/2)-IpK*sin(phi8(k)),zeros(1,4);
          0,-Ep*cos(phi4(k)-pi/2)+EpK*cos(phi4(k)),-EF*cos(phi5(k)),-FpH*cos(phi6(k))+Fp*cos(phi6(k)-pi/2),-HI*cos(phi7(k)),Ip*cos(phi8(k)-pi/2)+IpK*cos(phi8(k)),zeros(1,4)];
      
-    B = [ AB*sin(phi2)*dphi2;
-        -AB*cos(phi2)*dphi2;
+    B = [ AB*sin(phi2(k))*dphi2(k);
+        -AB*cos(phi2(k))*dphi2(k);
         0;
         0;
         0;
@@ -163,8 +163,8 @@ for k=1:t_size
          0,-Ep*cos(phi4(k)-pi/2)+EpK*cos(phi4(k)),-EF*cos(phi5(k)),-FpH*cos(phi6(k))+Fp*cos(phi6(k)-pi/2),-HI*cos(phi7(k)),Ip*cos(phi8(k)-pi/2)+IpK*cos(phi8(k)),zeros(1,4)];
 
      
-    B = [ AB*cos(phi2)*dphi2^2+AB*sin(phi2)*ddphi2-(-BD*cos(phi3(k))*dphi3(k) +CD*cos(phi4(k))*dphi4(k));
-        AB*sin(phi2)*dphi2^2--AB*cos(phi2)*ddphi2-( -BD*sin(phi3(k))*dphi3(k) +CD*sin(phi4(k))*dphi4(k));
+    B = [ AB*cos(phi2(k))*(dphi2(k))^2+AB*sin(phi2(k))*ddphi2(k)-(-BD*cos(phi3(k))*dphi3(k) +CD*cos(phi4(k))*dphi4(k));
+        AB*sin(phi2(k))*(dphi2(k))^2--AB*cos(phi2(k))*ddphi2(k)-( -BD*sin(phi3(k))*dphi3(k) +CD*sin(phi4(k))*dphi4(k));
         %
         -(Ep*cos(phi4(k)-pi/2)*dphi4(k)+CEp*cos(phi4(k))*dphi4(k)+EF*cos(phi5(k))*dphi5(k)-FpG*cos(phi6(k))*dphi6(k)-Fp*cos(phi6(k)-pi/2)*dphi6(k));
         -(Ep*sin(phi4(k)-pi/2)*dphi4(k)+CEp*sin(phi4(k))*dphi4(k)+EF*sin(phi5(k))*dphi5(k)-FpG*sin(phi6(k))*dphi6(k)-Fp*sin(phi6(k)-pi/2)*dphi6(k));
