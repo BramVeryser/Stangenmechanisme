@@ -89,7 +89,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 10;                    % end time of simulation
+t_end = 30;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -120,5 +120,5 @@ ddphi2=-omega^2*A*cos(omega*t);
 
 figure
 load fourbar_movie Movie
-movie(Movie)
+movie(Movie,1,5)
 

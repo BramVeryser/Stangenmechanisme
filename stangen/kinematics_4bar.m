@@ -220,10 +220,11 @@ end % loop over positions
 A = 0;
 C = ACx + j*ACy;
 G = AGx + j*AGy;
+KM = KLp8 + 7.514;
 % point S = fixed
 
 % define which positions we want as frames in our movie
-frames = 40;    % number of frames in movie
+frames = 60;    % number of frames in movie
 delta = floor(t_size/frames); % time between frames
 index_vec = [1:delta:t_size]';
 
@@ -266,13 +267,15 @@ for m=1:length(index_vec)
     O = N + NO * exp(j*phi10(index));
     P = O + OP * exp(j*phi11(index));
     
+    M = K + KM * exp(j*phi8(index));
+    
     
     loop1 = [A B D C];
     loop2 = [G Fv F E Ev C];
     loop3 = [Lv8 L Lv10 O P];
     loop4 = [Lv8 L Lv10 N J I Iv];
     loop5 = [Iv I H Fv F E Ev K];
-    loop6 = [K P];
+    loop6 = [K M];
     
     figure(10)
     clf
@@ -322,13 +325,16 @@ if fig_kin_4bar
     O = N + NO * exp(j*phi10(index));
     P = O + OP * exp(j*phi11(index));
     
+    M = K + KM * exp(j*phi8(index));
+    
+    
     figure()
     loop1 = [A B D C];
     loop2 = [G Fv F E Ev C];
     loop3 = [Lv8 L Lv10 O P];
     loop4 = [Lv8 L Lv10 N J I Iv];
     loop5 = [Iv I H Fv F E Ev K];
-    loop6 = [K P];
+    loop6 = [K M];
     plot(real(loop1),imag(loop1),'ro-')
     hold on
     plot(real(loop2),imag(loop2),'ro-')
