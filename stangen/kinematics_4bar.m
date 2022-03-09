@@ -109,11 +109,11 @@ for k=1:t_size
          0,Ep*sin(phi4(k)-pi/2)+CEp*sin(phi4(k)),+EF*sin(phi5(k)),-FpG*sin(phi6(k))-Fp*sin(phi6(k)-pi/2), zeros(1,6);
          0,-Ep*cos(phi4(k)-pi/2)-CEp*cos(phi4(k)),-EF*cos(phi5(k)),+FpG*cos(phi6(k))+Fp*cos(phi6(k)-pi/2), zeros(1,6);
          %lus3
-         zeros(1,6),-Lp8*sin(phi8(k)-pi/2)+PLp8*sin(phi8(k)),+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k))*dphi11(k),-cos(phi8(k));
-         zeros(1,6),Lp8*cos(phi8(k)-pi/2)-PLp8*cos(phi8(k)),-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k))*dphi11(k),-sin(phi8(k));
+         zeros(1,6),-Lp8*sin(phi8(k)-pi/2)+PLp8*sin(phi8(k)),+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k)),-cos(phi8(k));
+         zeros(1,6),Lp8*cos(phi8(k)-pi/2)-PLp8*cos(phi8(k)),-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k)),-sin(phi8(k));
          %lus4
-         zeros(1,4),-IJ*sin(phi7(k))*dphi7(k),-Lp8*sin(phi8(k)-pi/2)+Ip*sin(phi8(k)-pi/2)-IpLp8*sin(phi8(k)),+JN*sin(phi9(k)),+Lp10*sin(phi10(k)-pi/2)+Lp10N*sin(phi10(k)),0,0;
-         zeros(1,4),+IJ*cos(phi7(k))*dphi7(k),Lp8*cos(phi8(k)-pi/2)-Ip*cos(phi8(k)-pi/2)+IpLp8*cos(phi8(k)),-JN*cos(phi9(k)),-Lp10*cos(phi10(k)-pi/2)-Lp10N*cos(phi10(k)),0,0;
+         zeros(1,4),-IJ*sin(phi7(k)),-Lp8*sin(phi8(k)-pi/2)+Ip*sin(phi8(k)-pi/2)-IpLp8*sin(phi8(k)),+JN*sin(phi9(k)),+Lp10*sin(phi10(k)-pi/2)+Lp10N*sin(phi10(k)),0,0;
+         zeros(1,4),+IJ*cos(phi7(k)),Lp8*cos(phi8(k)-pi/2)-Ip*cos(phi8(k)-pi/2)+IpLp8*cos(phi8(k)),-JN*cos(phi9(k)),-Lp10*cos(phi10(k)-pi/2)-Lp10N*cos(phi10(k)),0,0;
          %lus5
          0,+Ep*sin(phi4(k)-pi/2)-EpK*sin(phi4(k)),EF*sin(phi5(k)),FpH*sin(phi6(k))-Fp*sin(phi6(k)-pi/2),HI*sin(phi7(k)),-Ip*sin(phi8(k)-pi/2)-IpK*sin(phi8(k)),zeros(1,4);
          0,-Ep*cos(phi4(k)-pi/2)+EpK*cos(phi4(k)),-EF*cos(phi5(k)),-FpH*cos(phi6(k))+Fp*cos(phi6(k)-pi/2),-HI*cos(phi7(k)),Ip*cos(phi8(k)-pi/2)+IpK*cos(phi8(k)),zeros(1,4)];

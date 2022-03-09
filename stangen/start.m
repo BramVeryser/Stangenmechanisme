@@ -86,7 +86,7 @@ phi9_init = 3.56888;
 phi10_init = 4.59245;
 phi11_init = 3.31019;
 PLp8=7.514*S;
-phi_init=[phi1,0,phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8];
+phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
 t_end = 10;                    % end time of simulation

@@ -34,16 +34,16 @@ EpK = CK - CEp;
 % arguments a1 ... phi1: constants
 
 % copy initial values of unknown angles phi3 and phi4
-phi3=phi_init(3);
-phi4=phi_init(4);
-phi5=phi_init(5);
-phi6=phi_init(6);
-phi7=phi_init(7);
-phi8=phi_init(8);
-phi9=phi_init(9);
-phi10=phi_init(10);
-phi11=phi_init(11);
-PLp8=phi_init(12);
+phi3=phi_init(1);
+phi4=phi_init(2);
+phi5=phi_init(3);
+phi6=phi_init(4);
+phi7=phi_init(5);
+phi8=phi_init(6);
+phi9=phi_init(7);
+phi10=phi_init(8);
+phi11=phi_init(9);
+PLp8=phi_init(10);
 
 %loop closure equations:
 %lus 1: 1234-1
