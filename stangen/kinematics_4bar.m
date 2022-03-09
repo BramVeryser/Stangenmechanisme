@@ -272,6 +272,7 @@ for m=1:length(index_vec)
     loop3 = [Lv8 L Lv10 O P];
     loop4 = [Lv8 L Lv10 N J I Iv];
     loop5 = [Iv I H Fv F E Ev K];
+    loop6 = [K P];
     
     figure(10)
     clf
@@ -282,6 +283,7 @@ for m=1:length(index_vec)
     plot(real(loop3),imag(loop3),'-o')
     plot(real(loop4),imag(loop4),'-o')
     plot(real(loop5),imag(loop5),'-o')
+    plot(real(loop6),imag(loop6),'-o')
     
     axis(movie_axes);     % set axes as in movie_axes
     Movie(m) = getframe;  % save frame to a variable Film
@@ -289,7 +291,7 @@ end
 
 % save movie
 save fourbar_movie Movie
-close(10)
+%close(10)
 
 
 % *** plot figures ***
@@ -326,12 +328,14 @@ if fig_kin_4bar
     loop3 = [Lv8 L Lv10 O P];
     loop4 = [Lv8 L Lv10 N J I Iv];
     loop5 = [Iv I H Fv F E Ev K];
+    loop6 = [K P];
     plot(real(loop1),imag(loop1),'ro-')
     hold on
     plot(real(loop2),imag(loop2),'ro-')
     plot(real(loop3),imag(loop3),'ro-')
     plot(real(loop4),imag(loop4),'ro-')
     plot(real(loop5),imag(loop5),'ro-')
+    plot(real(loop6),imag(loop6),'ro-')
     xlabel('[m]')
     ylabel('[m]')
     title('assembly')

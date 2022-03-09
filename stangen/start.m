@@ -94,7 +94,7 @@ Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
 % initialization of driver
-omega = 0.3; %zelf berekenen door phi2 te meten
+omega = 0.2; %zelf berekenen door phi2 te meten
 A = 1.019;
 B = 4.043;
 phi2=A*cos(omega*t+pi)+B; %tussen welke 2 hoeken ligt onze phi2?
