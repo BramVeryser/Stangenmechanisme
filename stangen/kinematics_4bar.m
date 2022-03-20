@@ -133,8 +133,10 @@ for k=1:t_size
         0;
         0;
         0];
-     
+%     rcond(A) 
     x = A\B;
+    
+    assert(norm(A*x-B) < 10^(-10),"numeriek niet stabiel")
     
     % save results
     dphi3(k)=x(1);
@@ -152,24 +154,24 @@ for k=1:t_size
     % *** acceleration analysis ***
     %matrix A voor dynamica is A kin want d(c*dphi) => c*ddphi (matrix A) + dc*dphi (matrix B), componenten
     %afleiden naar phi moet in B staan (constanten)
-    A = [-BD*sin(phi3(k)), +CD*sin(phi4(k)),zeros(1,8);
-         +BD*cos(phi3(k)), -CD*cos(phi4(k)),zeros(1,8);
-         %lus2
-         0,Ep*sin(phi4(k)-pi/2)+CEp*sin(phi4(k)),+EF*sin(phi5(k)),-FpG*sin(phi6(k))-Fp*sin(phi6(k)-pi/2), zeros(1,6);
-         0,-Ep*cos(phi4(k)-pi/2)-CEp*cos(phi4(k)),-EF*cos(phi5(k)),+FpG*cos(phi6(k))+Fp*cos(phi6(k)-pi/2), zeros(1,6);
-         %lus3
-         zeros(1,6),-Lp8*sin(phi8(k)-pi/2)+PLp8(k)*sin(phi8(k)),+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k))*dphi11(k),-cos(phi8(k));
-         zeros(1,6),Lp8*cos(phi8(k)-pi/2)-PLp8(k)*cos(phi8(k)),-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k))*dphi11(k),-sin(phi8(k));
-         %lus4
-         zeros(1,4),-IJ*sin(phi7(k))*dphi7(k),-Lp8*sin(phi8(k)-pi/2)+Ip*sin(phi8(k)-pi/2)-IpLp8*sin(phi8(k)),+JN*sin(phi9(k)),+Lp10*sin(phi10(k)-pi/2)+Lp10N*sin(phi10(k)),0,0;
-         zeros(1,4),+IJ*cos(phi7(k))*dphi7(k),Lp8*cos(phi8(k)-pi/2)-Ip*cos(phi8(k)-pi/2)+IpLp8*cos(phi8(k)),-JN*cos(phi9(k)),-Lp10*cos(phi10(k)-pi/2)-Lp10N*cos(phi10(k)),0,0;
-         %lus5
-         0,+Ep*sin(phi4(k)-pi/2)-EpK*sin(phi4(k)),EF*sin(phi5(k)),FpH*sin(phi6(k))-Fp*sin(phi6(k)-pi/2),HI*sin(phi7(k)),-Ip*sin(phi8(k)-pi/2)-IpK*sin(phi8(k)),zeros(1,4);
-         0,-Ep*cos(phi4(k)-pi/2)+EpK*cos(phi4(k)),-EF*cos(phi5(k)),-FpH*cos(phi6(k))+Fp*cos(phi6(k)-pi/2),-HI*cos(phi7(k)),Ip*cos(phi8(k)-pi/2)+IpK*cos(phi8(k)),zeros(1,4)];
+%     A = [-BD*sin(phi3(k)), +CD*sin(phi4(k)),zeros(1,8);
+%          +BD*cos(phi3(k)), -CD*cos(phi4(k)),zeros(1,8);
+%          %lus2
+%          0,Ep*sin(phi4(k)-pi/2)+CEp*sin(phi4(k)),+EF*sin(phi5(k)),-FpG*sin(phi6(k))-Fp*sin(phi6(k)-pi/2), zeros(1,6);
+%          0,-Ep*cos(phi4(k)-pi/2)-CEp*cos(phi4(k)),-EF*cos(phi5(k)),+FpG*cos(phi6(k))+Fp*cos(phi6(k)-pi/2), zeros(1,6);
+%          %lus3
+%          zeros(1,6),-Lp8*sin(phi8(k)-pi/2)+PLp8(k)*sin(phi8(k)),+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k))*dphi11(k),-cos(phi8(k));
+%          zeros(1,6),Lp8*cos(phi8(k)-pi/2)-PLp8(k)*cos(phi8(k)),-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k))*dphi11(k),-sin(phi8(k));
+%          %lus4
+%          zeros(1,4),-IJ*sin(phi7(k))*dphi7(k),-Lp8*sin(phi8(k)-pi/2)+Ip*sin(phi8(k)-pi/2)-IpLp8*sin(phi8(k)),+JN*sin(phi9(k)),+Lp10*sin(phi10(k)-pi/2)+Lp10N*sin(phi10(k)),0,0;
+%          zeros(1,4),+IJ*cos(phi7(k))*dphi7(k),Lp8*cos(phi8(k)-pi/2)-Ip*cos(phi8(k)-pi/2)+IpLp8*cos(phi8(k)),-JN*cos(phi9(k)),-Lp10*cos(phi10(k)-pi/2)-Lp10N*cos(phi10(k)),0,0;
+%          %lus5
+%          0,+Ep*sin(phi4(k)-pi/2)-EpK*sin(phi4(k)),EF*sin(phi5(k)),FpH*sin(phi6(k))-Fp*sin(phi6(k)-pi/2),HI*sin(phi7(k)),-Ip*sin(phi8(k)-pi/2)-IpK*sin(phi8(k)),zeros(1,4);
+%          0,-Ep*cos(phi4(k)-pi/2)+EpK*cos(phi4(k)),-EF*cos(phi5(k)),-FpH*cos(phi6(k))+Fp*cos(phi6(k)-pi/2),-HI*cos(phi7(k)),Ip*cos(phi8(k)-pi/2)+IpK*cos(phi8(k)),zeros(1,4)];
 
      
     B = [ AB*cos(phi2(k))*(dphi2(k))^2+AB*sin(phi2(k))*ddphi2(k)-(-BD*cos(phi3(k))*dphi3(k) +CD*cos(phi4(k))*dphi4(k));
-        AB*sin(phi2(k))*(dphi2(k))^2--AB*cos(phi2(k))*ddphi2(k)-( -BD*sin(phi3(k))*dphi3(k) +CD*sin(phi4(k))*dphi4(k));
+        AB*sin(phi2(k))*(dphi2(k))^2+AB*cos(phi2(k))*ddphi2(k)-( -BD*sin(phi3(k))*dphi3(k) +CD*sin(phi4(k))*dphi4(k));
         %
         -(Ep*cos(phi4(k)-pi/2)*dphi4(k)+CEp*cos(phi4(k))*dphi4(k)+EF*cos(phi5(k))*dphi5(k)-FpG*cos(phi6(k))*dphi6(k)-Fp*cos(phi6(k)-pi/2)*dphi6(k));
         -(Ep*sin(phi4(k)-pi/2)*dphi4(k)+CEp*sin(phi4(k))*dphi4(k)+EF*sin(phi5(k))*dphi5(k)-FpG*sin(phi6(k))*dphi6(k)-Fp*sin(phi6(k)-pi/2)*dphi6(k));
@@ -183,7 +185,7 @@ for k=1:t_size
         -(+Ep*cos(phi4(k)-pi/2)*dphi4(k)-EpK*cos(phi4(k))*dphi4(k)+EF*cos(phi5(k))*dphi5(k)+FpH*cos(phi6(k))*dphi6(k)-Fp*cos(phi6(k)-pi/2)*dphi6(k)+HI*cos(phi7(k))*dphi7(k)-Ip*cos(phi8(k)-pi/2)*dphi8(k)-IpK*cos(phi8(k))*dphi8(k));
         -(+Ep*sin(phi4(k)-pi/2)*dphi4(k)-EpK*sin(phi4(k))*dphi4(k)+EF*sin(phi5(k))*dphi5(k)+FpH*sin(phi6(k))*dphi6(k)-Fp*sin(phi6(k)-pi/2)*dphi6(k)+HI*sin(phi7(k))*dphi7(k)-Ip*sin(phi8(k)-pi/2)*dphi8(k)-IpK*sin(phi8(k))*dphi8(k))];
     
-    
+%     rcond(A)
     x = A\B;
     % save results
     ddphi3(k)=x(1);
@@ -210,7 +212,11 @@ for k=1:t_size
     phi11_init = phi11(k)+Ts*dphi11(k);
     PLp_init = PLp8(k)+Ts*dPLp8(k);
     
+
+    assert(norm(A*x-B) < 10^(-10),"numeriek niet stabiel")
+ 
 end % loop over positions
+
 
 
 
@@ -297,6 +303,7 @@ save fourbar_movie Movie
 %close(10)
 
 
+
 % *** plot figures ***
 
 if fig_kin_4bar
@@ -347,41 +354,41 @@ if fig_kin_4bar
     title('assembly')
     axis equal
     
-%     figure
-%     subplot(311)
-%     plot(t,phi2)
-%     ylabel('\phi_2 [rad]')
-%     subplot(312)
-%     plot(t,phi3)
-%     ylabel('\phi_3 [rad]')
-%     subplot(313)
-%     plot(t,phi4)
-%     ylabel('\phi_4 [rad]')
-%     xlabel('t [s]')
-%     
-%     figure
-%     subplot(311)
-%     plot(t,dphi2)
-%     ylabel('d\phi_2 [rad/s]')
-%     subplot(312)
-%     plot(t,dphi3)
-%     ylabel('d\phi_3 [rad/s]')
-%     subplot(313)
-%     plot(t,dphi4)
-%     ylabel('d\phi_4 [rad/s]')
-%     xlabel('t [s]')
-%     
-%     figure
-%     subplot(311)
-%     plot(t,ddphi2)
-%     ylabel('dd\phi_2 [rad/s^2]')
-%     subplot(312)
-%     plot(t,ddphi3)
-%     ylabel('dd\phi_3 [rad/s^2]')
-%     subplot(313)
-%     plot(t,ddphi4)
-%     ylabel('dd\phi_4 [rad/s^2]')
-%     xlabel('t [s]')
+    figure
+    subplot(311)
+    plot(t,phi5)
+    ylabel('\phi_2 [rad]')
+    subplot(312)
+    plot(t,phi6)
+    ylabel('\phi_3 [rad]')
+    subplot(313)
+    plot(t,phi7)
+    ylabel('\phi_4 [rad]')
+    xlabel('t [s]')
+    
+    figure
+    subplot(311)
+    plot(t,dphi5)
+    ylabel('d\phi_2 [rad/s]')
+    subplot(312)
+    plot(t,dphi6)
+    ylabel('d\phi_3 [rad/s]')
+    subplot(313)
+    plot(t,dphi7)
+    ylabel('d\phi_4 [rad/s]')
+    xlabel('t [s]')
+    
+    figure
+    subplot(311)
+    plot(t,ddphi5)
+    ylabel('dd\phi_2 [rad/s^2]')
+    subplot(312)
+    plot(t,ddphi6)
+    ylabel('dd\phi_3 [rad/s^2]')
+    subplot(313)
+    plot(t,ddphi7)
+    ylabel('dd\phi_4 [rad/s^2]')
+    xlabel('t [s]')
 end
 
 

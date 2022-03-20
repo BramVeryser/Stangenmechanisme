@@ -98,8 +98,8 @@ omega = 0.2; %zelf berekenen door phi2 te meten
 A = 1.019;
 B = 4.043;
 phi2=A*cos(omega*t+pi)+B; %tussen welke 2 hoeken ligt onze phi2?
-dphi2=-omega*A*sin(omega*t);
-ddphi2=-omega^2*A*cos(omega*t);
+dphi2=-omega*A*sin(omega*t+pi);
+ddphi2=-omega^2*A*cos(omega*t+pi);
 
 % calculation of the kinematics (see kin_4bar.m)
 [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar);
@@ -120,5 +120,5 @@ ddphi2=-omega^2*A*cos(omega*t);
 
 figure
 load fourbar_movie Movie
-movie(Movie,1,5)
+movie(Movie)
 
