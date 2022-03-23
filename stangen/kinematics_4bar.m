@@ -252,7 +252,7 @@ movie_axes = axis;   %save current axes into movie_axes
 % draw and save movie frame
 for m=1:length(index_vec)
     index = index_vec(m);
-    B = A + AB * exp(j*phi2(index));
+    
     D = B + BD * exp(j*phi3(index));
     
     Fv = G + FpG * exp(j*phi6(index));
@@ -304,7 +304,7 @@ save fourbar_movie Movie
 
 
 
-% *** plot figures ***
+%% *** plot figures ***
 
 if fig_kin_4bar
     
@@ -354,41 +354,9 @@ if fig_kin_4bar
     title('assembly')
     axis equal
     
-    figure
-    subplot(311)
-    plot(t,phi2)
-    ylabel('\phi_2 [rad]')
-    subplot(312)
-    plot(t,phi3)
-    ylabel('\phi_3 [rad]')
-    subplot(313)
-    plot(t,PLp8)
-    ylabel('\phi_4 [rad]')
-    xlabel('t [s]')
-    
-    figure
-    subplot(311)
-    plot(t,dphi2)
-    ylabel('d\phi_2 [rad/s]')
-    subplot(312)
-    plot(t,dphi3)
-    ylabel('d\phi_3 [rad/s]')
-    subplot(313)
-    plot(t,dPLp8)
-    ylabel('d\phi_4 [rad/s]')
-    xlabel('t [s]')
-    
-    figure
-    subplot(311)
-    plot(t,ddphi2)
-    ylabel('dd\phi_2 [rad/s^2]')
-    subplot(312)
-    plot(t,ddphi3)
-    ylabel('dd\phi_3 [rad/s^2]')
-    subplot(313)
-    plot(t,ddPLp8)
-    ylabel('dd\phi_4 [rad/s^2]')
-    xlabel('t [s]')
+    plot_kin(t,phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4)
+    plot_kin(t,phi5,phi6,phi7,dphi5,dphi6,dphi7,ddphi5,ddphi6,ddphi7)
+    plot_kin(t,phi8,phi9,phi10,dphi8,dphi9,dphi10,ddphi8,ddphi9,ddphi10)
 end
 
 
