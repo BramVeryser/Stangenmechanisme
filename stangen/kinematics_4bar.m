@@ -114,8 +114,8 @@ for k=1:t_size
          0,Ep*sin(phi4(k)-pi/2)+CEp*sin(phi4(k)),+EF*sin(phi5(k)),-FpG*sin(phi6(k))-Fp*sin(phi6(k)-pi/2), zeros(1,6);
          0,-Ep*cos(phi4(k)-pi/2)-CEp*cos(phi4(k)),-EF*cos(phi5(k)),+FpG*cos(phi6(k))+Fp*cos(phi6(k)-pi/2), zeros(1,6);
          %lus3
-         zeros(1,6),-Lp8*sin(phi8(k)-pi/2)+PLp8(k)*sin(phi8(k)),+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k)),-cos(phi8(k));
-         zeros(1,6),Lp8*cos(phi8(k)-pi/2)-PLp8(k)*cos(phi8(k)),-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k)),-sin(phi8(k));
+         zeros(1,5),-Lp8*sin(phi8(k)-pi/2)+PLp8(k)*sin(phi8(k)),0,+Lp10*sin(phi10(k)-pi/2)-Lp10O*sin(phi10(k)),-OP*sin(phi11(k)),-cos(phi8(k));
+         zeros(1,5),Lp8*cos(phi8(k)-pi/2)-PLp8(k)*cos(phi8(k)),0,-Lp10*cos(phi10(k)-pi/2)+Lp10O*cos(phi10(k)),+OP*cos(phi11(k)),-sin(phi8(k));
          %lus4
          zeros(1,4),-IJ*sin(phi7(k)),-Lp8*sin(phi8(k)-pi/2)+Ip*sin(phi8(k)-pi/2)-IpLp8*sin(phi8(k)),+JN*sin(phi9(k)),+Lp10*sin(phi10(k)-pi/2)+Lp10N*sin(phi10(k)),0,0;
          zeros(1,4),+IJ*cos(phi7(k)),Lp8*cos(phi8(k)-pi/2)-Ip*cos(phi8(k)-pi/2)+IpLp8*cos(phi8(k)),-JN*cos(phi9(k)),-Lp10*cos(phi10(k)-pi/2)-Lp10N*cos(phi10(k)),0,0;
@@ -176,14 +176,14 @@ for k=1:t_size
         -(Ep*cos(phi4(k)-pi/2)*dphi4(k)^2+CEp*cos(phi4(k))*dphi4(k)^2+EF*cos(phi5(k))*dphi5(k)^2-FpG*cos(phi6(k))*dphi6(k)^2-Fp*cos(phi6(k)-pi/2)*dphi6(k)^2);
         -(Ep*sin(phi4(k)-pi/2)*dphi4(k)^2+CEp*sin(phi4(k))*dphi4(k)^2+EF*sin(phi5(k))*dphi5(k)^2-FpG*sin(phi6(k))*dphi6(k)^2-Fp*sin(phi6(k)-pi/2)*dphi6(k)^2);
         %
-        -(-Lp8*cos(phi8(k)-pi/2)*dphi8(k)^2+PLp8(k)*cos(phi8(k))*dphi8(k)^2+Lp10*cos(phi10(k)-pi/2)*dphi10(k)^2-Lp10O*cos(phi10(k))*dphi10(k)^2-OP*cos(phi11(k))*dphi11(k)^2 +sin(phi8(k))*dphi8(k)*dPLp8(k));
-        -(-Lp8*sin(phi8(k)-pi/2)*dphi8(k)^2+PLp8(k)*sin(phi8(k))*dphi8(k)^2+Lp10*sin(phi10(k)-pi/2)*dphi10(k)^2-Lp10O*sin(phi10(k))*dphi10(k)^2-OP*sin(phi11(k))*dphi11(k)^2 -cos(phi8(k))*dphi8(k)*dPLp8(k));
+        -(-Lp8*cos(phi8(k)-pi/2)*dphi8(k)^2+PLp8(k)*cos(phi8(k))*dphi8(k)^2+Lp10*cos(phi10(k)-pi/2)*dphi10(k)^2-Lp10O*cos(phi10(k))*dphi10(k)^2-OP*cos(phi11(k))*dphi11(k)^2 +2*sin(phi8(k))*dphi8(k)*dPLp8(k));
+        -(-Lp8*sin(phi8(k)-pi/2)*dphi8(k)^2+PLp8(k)*sin(phi8(k))*dphi8(k)^2+Lp10*sin(phi10(k)-pi/2)*dphi10(k)^2-Lp10O*sin(phi10(k))*dphi10(k)^2-OP*sin(phi11(k))*dphi11(k)^2 -2*cos(phi8(k))*dphi8(k)*dPLp8(k));
         %
         -(-IJ*cos(phi7(k))*dphi7(k)^2-Lp8*cos(phi8(k)-pi/2)*dphi8(k)^2+Ip*cos(phi8(k)-pi/2)*dphi8(k)^2-IpLp8*cos(phi8(k))*dphi8(k)^2+JN*cos(phi9(k))*dphi9(k)^2+Lp10*cos(phi10(k)-pi/2)*dphi10(k)^2+Lp10N*cos(phi10(k))*dphi10(k)^2);
         -(-IJ*sin(phi7(k))*dphi7(k)^2-Lp8*sin(phi8(k)-pi/2)*dphi8(k)^2+Ip*sin(phi8(k)-pi/2)*dphi8(k)^2-IpLp8*sin(phi8(k))*dphi8(k)^2+JN*sin(phi9(k))*dphi9(k)^2+Lp10*sin(phi10(k)-pi/2)*dphi10(k)^2+Lp10N*sin(phi10(k))*dphi10(k)^2);
         %
-        -(+Ep*cos(phi4(k)-pi/2)*dphi4(k)^2-EpK*cos(phi4(k))*dphi4(k)^2+EF*cos(phi5(k))*dphi5(k)+FpH*cos(phi6(k))*dphi6(k)^2-Fp*cos(phi6(k)-pi/2)*dphi6(k)^2+HI*cos(phi7(k))*dphi7(k)^2-Ip*cos(phi8(k)-pi/2)*dphi8(k)^2-IpK*cos(phi8(k))*dphi8(k)^2);
-        -(+Ep*sin(phi4(k)-pi/2)*dphi4(k)^2-EpK*sin(phi4(k))*dphi4(k)^2+EF*sin(phi5(k))*dphi5(k)+FpH*sin(phi6(k))*dphi6(k)^2-Fp*sin(phi6(k)-pi/2)*dphi6(k)^2+HI*sin(phi7(k))*dphi7(k)^2-Ip*sin(phi8(k)-pi/2)*dphi8(k)^2-IpK*sin(phi8(k))*dphi8(k)^2)];
+        -(+Ep*cos(phi4(k)-pi/2)*dphi4(k)^2-EpK*cos(phi4(k))*dphi4(k)^2+EF*cos(phi5(k))*dphi5(k)^2+FpH*cos(phi6(k))*dphi6(k)^2-Fp*cos(phi6(k)-pi/2)*dphi6(k)^2+HI*cos(phi7(k))*dphi7(k)^2-Ip*cos(phi8(k)-pi/2)*dphi8(k)^2-IpK*cos(phi8(k))*dphi8(k)^2);
+        -(+Ep*sin(phi4(k)-pi/2)*dphi4(k)^2-EpK*sin(phi4(k))*dphi4(k)^2+EF*sin(phi5(k))*dphi5(k)^2+FpH*sin(phi6(k))*dphi6(k)^2-Fp*sin(phi6(k)-pi/2)*dphi6(k)^2+HI*sin(phi7(k))*dphi7(k)^2-Ip*sin(phi8(k)-pi/2)*dphi8(k)^2-IpK*sin(phi8(k))*dphi8(k)^2)];
     
 %     rcond(A)
     x = A\B;
@@ -356,37 +356,37 @@ if fig_kin_4bar
     
     figure
     subplot(311)
-    plot(t,phi5)
+    plot(t,phi2)
     ylabel('\phi_2 [rad]')
     subplot(312)
-    plot(t,phi6)
+    plot(t,phi3)
     ylabel('\phi_3 [rad]')
     subplot(313)
-    plot(t,phi7)
+    plot(t,PLp8)
     ylabel('\phi_4 [rad]')
     xlabel('t [s]')
     
     figure
     subplot(311)
-    plot(t,dphi5)
+    plot(t,dphi2)
     ylabel('d\phi_2 [rad/s]')
     subplot(312)
-    plot(t,dphi6)
+    plot(t,dphi3)
     ylabel('d\phi_3 [rad/s]')
     subplot(313)
-    plot(t,dphi7)
+    plot(t,dPLp8)
     ylabel('d\phi_4 [rad/s]')
     xlabel('t [s]')
     
     figure
     subplot(311)
-    plot(t,ddphi5)
+    plot(t,ddphi2)
     ylabel('dd\phi_2 [rad/s^2]')
     subplot(312)
-    plot(t,ddphi6)
+    plot(t,ddphi3)
     ylabel('dd\phi_3 [rad/s^2]')
     subplot(313)
-    plot(t,ddphi7)
+    plot(t,ddPLp8)
     ylabel('dd\phi_4 [rad/s^2]')
     xlabel('t [s]')
 end
