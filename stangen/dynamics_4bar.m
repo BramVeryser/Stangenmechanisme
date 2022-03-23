@@ -28,38 +28,38 @@ IpLp8 = KLp8 - IpK;
 FpH = GH - FpG;
 EpK = CK - CEp;
 % variabelen phi dphi en ddphi moeten nog gedefinieerd worden in kin
-phi3 = phi(1);
-phi4 = phi(2);
-phi5 = phi(3);
-phi6 = phi(4);
-phi7 = phi(5);
-phi8 = phi(6);
-phi9 = phi(7);
-phi10 = phi(8);
-phi11 = phi(9);
-PLp8= phi(10);
+phi3 = phi(1,:);
+phi4 = phi(2,:);
+phi5 = phi(3,:);
+phi6 = phi(4,:);
+phi7 = phi(5,:);
+phi8 = phi(6,:);
+phi9 = phi(7,:);
+phi10 = phi(8,:);
+phi11 = phi(9,:);
+PLp8= phi(10,:);
 %
-dphi3 = dphi(1);
-dphi4 = dphi(2);
-dphi5 = dphi(3);
-dphi6 = dphi(4);
-dphi7 = dphi(5);
-dphi8 = dphi(6);
-dphi9 = dphi(7);
-dphi10 = dphi(8);
-dphi11 = dphi(9);
-dPLp8= dphi(10);
+dphi3 = dphi(1,:);
+dphi4 = dphi(2,:);
+dphi5 = dphi(3,:);
+dphi6 = dphi(4,:);
+dphi7 = dphi(5,:);
+dphi8 = dphi(6,:);
+dphi9 = dphi(7,:);
+dphi10 = dphi(8,:);
+dphi11 = dphi(9,:);
+dPLp8= dphi(10,:);
 %
-ddphi3 = ddphi(1);
-ddphi4 = ddphi(2);
-ddphi5 = ddphi(3);
-ddphi6 = ddphi(4);
-ddphi7 = ddphi(5);
-ddphi8 = ddphi(6);
-ddphi9 = ddphi(7);
-ddphi10= ddphi(8);
-ddphi11= ddphi(9);
-ddPLp8 = ddphi(10);
+ddphi3 = ddphi(1,:);
+ddphi4 = ddphi(2,:);
+ddphi5 = ddphi(3,:);
+ddphi6 = ddphi(4,:);
+ddphi7 = ddphi(5,:);
+ddphi8 = ddphi(6,:);
+ddphi9 = ddphi(7,:);
+ddphi10= ddphi(8,:);
+ddphi11= ddphi(9,:);
+ddPLp8 = ddphi(10,:);
 
 % a lot of definitions to make the matrix A and B a bit clear.
 % skip the definitions for now (move down to "force analysis")
@@ -107,16 +107,16 @@ cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= r
 
 
 % 3D omega (dphi) and alpha (ddphi) vectors)
-omega2 = [0 0 dphi2];
-omega3 = [0 0 dphi3];
-omega4 = [0 0 dphi4];
-omega5 = [0 0 dphi5];
-omega6 = [0 0 dphi6];
-omega7 = [0 0 dphi7];
-omega8 = [0 0 dphi8];
-omega9 = [0 0 dphi9];
-omega10 = [0 0 dphi10];
-omega11 = [0 0 dphi11];
+omega2 = [zeros(size(phi2)) zeros(size(phi2))dphi2];
+omega3 = [zeros(size(phi2)) zeros(size(phi2)) dphi3];
+omega4 = [zeros(size(phi2)) zeros(size(phi2)) dphi4];
+omega5 = [zeros(size(phi2)) zeros(size(phi2)) dphi5];
+omega6 = [zeros(size(phi2)) zeros(size(phi2)) dphi6];
+omega7 = [zeros(size(phi2)) zeros(size(phi2))dphi7];
+omega8 = [zeros(size(phi2)) zeros(size(phi2)) dphi8];
+omega9 = [zeros(size(phi2)) zeros(size(phi2))dphi9];
+omega10 = [zeros(size(phi2)) zeros(size(phi2))dphi10];
+omega11 = [zeros(size(phi2)) zeros(size(phi2)) dphi11];
 
 alpha2 = [zeros(size(phi2)) zeros(size(phi2)) ddphi2];
 alpha3 = [zeros(size(phi2)) zeros(size(phi2)) ddphi3];
@@ -130,24 +130,24 @@ alpha10 = [zeros(size(phi2)) zeros(size(phi2)) ddphi10];
 alpha11 = [zeros(size(phi2)) zeros(size(phi2)) ddphi11];
 
 % 3D model vectors
-A_cog2_vec = [-cog2_A_x -cog2_A_y 0];
-C_cog4_vec = [-cog4_C_x -cog4_C_y 0];
-G_cog6_vec = [-cog6_G_x -cog6_G_y 0];
-E_cog5_vec = [-cog5_E_x -cog5_E_y 0];
-H_cog7_vec = [-cog7_H_x -cog7_H_y 0];
-K_cog8_vec = [-cog8_K_x -cog8_K_y 0];
-J_cog9_vec = [-cog9_J_x -cog9_J_y 0];
-N_cog10_vec= [-cog10_N_x -cog10_N_y 0];
-O_cog11_vec= [-cog11_O_x -cog11_O_y 0];
+A_cog2_vec = [-cog2_A_x -cog2_A_y zeros(size(phi2))];
+C_cog4_vec = [-cog4_C_x -cog4_C_y zeros(size(phi2))];
+G_cog6_vec = [-cog6_G_x -cog6_G_y zeros(size(phi2))];
+E_cog5_vec = [-cog5_E_x -cog5_E_y zeros(size(phi2))];
+H_cog7_vec = [-cog7_H_x -cog7_H_y zeros(size(phi2))];
+K_cog8_vec = [-cog8_K_x -cog8_K_y zeros(size(phi2))];
+J_cog9_vec = [-cog9_J_x -cog9_J_y zeros(size(phi2))];
+N_cog10_vec= [-cog10_N_x -cog10_N_y zeros(size(phi2))];
+O_cog11_vec= [-cog11_O_x -cog11_O_y zeros(size(phi2))];
 
-A_B_vec     = A_cog2_vec + [cog2_B_x cog2_B_y 0];
-B_cog3_vec  = [-cog3_B_x -cog3_B_y 0];
-C_E_vec     = C_cog4_vec + [cog4_E_x cog4_E_y 0];
-G_H_vec     = G_cog6_vec + [cog6_H_x cog6_H_y 0];
-C_K_vec     = C_cog4_vec + [cog4_K_x cog4_K_y 0];
-H_J_vec     = H_cog7_vec + [cog7_J_x cog7_J_y 0];
-J_N_vec     = J_cog9_vec + [cog9_N_x cog9_N_y 0];
-N_O_vec     = N_cog10_vec+ [cog10_O_x cog10_O_y 0];
+A_B_vec     = A_cog2_vec + [cog2_B_x cog2_B_y zeros(size(phi2))];
+B_cog3_vec  = [-cog3_B_x -cog3_B_y zeros(size(phi2))];
+C_E_vec     = C_cog4_vec + [cog4_E_x cog4_E_y zeros(size(phi2))];
+G_H_vec     = G_cog6_vec + [cog6_H_x cog6_H_y zeros(size(phi2))];
+C_K_vec     = C_cog4_vec + [cog4_K_x cog4_K_y zeros(size(phi2))];
+H_J_vec     = H_cog7_vec + [cog7_J_x cog7_J_y zeros(size(phi2))];
+J_N_vec     = J_cog9_vec + [cog9_N_x cog9_N_y zeros(size(phi2))];
+N_O_vec     = N_cog10_vec+ [cog10_O_x cog10_O_y zeros(size(phi2))];
 
 % acceleration vectors
 acc_B =     cross(omega2,cross(omega2,A_B_vec))+cross(alpha2,A_B_vec);%
