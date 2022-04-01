@@ -11,7 +11,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar)
+function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
 CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
@@ -63,6 +63,17 @@ ddphi9 = zeros(size(t));
 ddphi10 = zeros(size(t));
 ddphi11 = zeros(size(t));
 ddPLp8= zeros(size(t));
+
+test_numeriek_afleiden3 = zeros(size(t)-1);
+test_numeriek_afleiden4 = zeros(size(t)-1);
+test_numeriek_afleiden5 = zeros(size(t)-1);
+test_numeriek_afleiden6 = zeros(size(t)-1);
+test_numeriek_afleiden7 = zeros(size(t)-1);
+test_numeriek_afleiden8 = zeros(size(t)-1);
+test_numeriek_afleiden9 = zeros(size(t)-1);
+test_numeriek_afleiden10 = zeros(size(t)-1);
+test_numeriek_afleiden11 = zeros(size(t)-1);
+test_numeriek_afleiden12 = zeros(size(t)-1);
 
 % fsolve options (help fsolve, help optimset)
 optim_options = optimset('Display','off');
@@ -213,6 +224,32 @@ for k=1:t_size
     
 
     assert(norm(A*x-B) < 10^(-10),"numeriek niet stabiel")
+    
+    if (k ~= 1)
+%         test_numeriek_afleiden3(k-1) = (phi3(k)- phi3(k-1))/Ts; 
+%         test_numeriek_afleiden4(k-1) = (phi4(k)- phi4(k-1))/Ts;
+%         test_numeriek_afleiden5(k-1) = (phi5(k)- phi5(k-1))/Ts;
+%         test_numeriek_afleiden6(k-1) = (phi6(k)- phi6(k-1))/Ts;
+%         test_numeriek_afleiden7(k-1) = (phi7(k)- phi7(k-1))/Ts;
+%         test_numeriek_afleiden8(k-1) = (phi8(k)- phi8(k-1))/Ts;
+%         test_numeriek_afleiden9(k-1) = (phi9(k)- phi9(k-1))/Ts;
+%         test_numeriek_afleiden10(k-1) = (phi10(k)- phi10(k-1))/Ts;
+%         test_numeriek_afleiden11(k-1) = (phi11(k)- phi11(k-1))/Ts;
+%         test_numeriek_afleiden12(k-1) = (PLp8(k)- PLp8(k-1))/Ts;
+        
+        test_numeriek_afleiden3(k-1) = (dphi3(k)- dphi3(k-1))/Ts; 
+        test_numeriek_afleiden4(k-1) = (dphi4(k)- dphi4(k-1))/Ts;
+        test_numeriek_afleiden5(k-1) = (dphi5(k)- dphi5(k-1))/Ts;
+        test_numeriek_afleiden6(k-1) = (dphi6(k)- dphi6(k-1))/Ts;
+        test_numeriek_afleiden7(k-1) = (dphi7(k)- dphi7(k-1))/Ts;
+        test_numeriek_afleiden8(k-1) = (dphi8(k)- dphi8(k-1))/Ts;
+        test_numeriek_afleiden9(k-1) = (dphi9(k)- dphi9(k-1))/Ts;
+        test_numeriek_afleiden10(k-1) = (dphi10(k)- dphi10(k-1))/Ts;
+        test_numeriek_afleiden11(k-1) = (dphi11(k)- dphi11(k-1))/Ts;
+        test_numeriek_afleiden12(k-1) = (dPLp8(k)- dPLp8(k-1))/Ts;
+        
+        
+    end
  
 end % loop over positions
 
@@ -224,142 +261,146 @@ ddphi = [ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11,ddPLp8
 
 % point P = fixed
 
-% A = 0;
-% C = ACx + j*ACy;
-% G = AGx + j*AGy;
-% KM = KLp8 + 7.514;
-% % point S = fixed
-% 
-% % define which positions we want as frames in our movie
-% frames = 60;    % number of frames in movie
-% delta = floor(t_size/frames); % time between frames
-% index_vec = [1:delta:t_size]';
-% 
-% % Create a window large enough for the whole mechanisme in all positions, to prevent scrolling.
-% % This is done by plotting a diagonal from (x_left, y_bottom) to (x_right, y_top), setting the
-% % axes equal and saving the axes into "movie_axes", so that "movie_axes" can be used for further
-% % plots.
-% x_left = -40;
-% y_bottom = -20;
-% x_right = 5;
-% y_top = 20;
-% 
-% figure(10)
-% hold on
-% plot([x_left, x_right], [y_bottom, y_top]);
-% axis equal;
-% movie_axes = axis;   %save current axes into movie_axes
-% 
-% % draw and save movie frame
-% for m=1:length(index_vec)
-%     index = index_vec(m);
-%     
-%     B = A + AB * exp(j*phi2(index));
-%     D = B + BD * exp(j*phi3(index));
-%     
-%     Fv = G + FpG * exp(j*phi6(index));
-%     F = Fv + Fp * exp(j*(phi6(index)-pi/2));
-%     E = F - EF * exp(j*phi5(index));
-%     Ev = E - Ep * exp(j*(phi4(index)-pi/2));
-%     
-%     K = Ev + (CK-CEp) * exp(j*phi4(index));
-%     Iv = K + IpK * exp(j*phi8(index));
-%     I = Iv + Ip * exp(j*(phi8(index)-pi/2));
-%     H = Fv + (GH-FpG) * exp(j*phi6(index));
-%     Lv8 = K + KLp8 * exp(j*phi8(index));
-%     L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
-%     Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
-%     
-%     J = H + (HI - IJ) * exp(j*phi7(index));
-%     N = J + JN * exp(j*phi9(index));
-%     O = N + NO * exp(j*phi10(index));
-%     P = O + OP * exp(j*phi11(index));
-%     
-%     M = K + KM * exp(j*phi8(index));
-%     
-%     
-%     loop1 = [A B D C];
-%     loop2 = [G Fv F E Ev C];
-%     loop3 = [Lv8 L Lv10 O P];
-%     loop4 = [Lv8 L Lv10 N J I Iv];
-%     loop5 = [Iv I H Fv F E Ev K];
-%     loop6 = [K M];
-%     
-%     figure(10)
-%     clf
-%     hold on
-%     plot(real(loop1),imag(loop1),'-o')
-%     hold on 
-%     plot(real(loop2),imag(loop2),'-o')
-%     plot(real(loop3),imag(loop3),'-o')
-%     plot(real(loop4),imag(loop4),'-o')
-%     plot(real(loop5),imag(loop5),'-o')
-%     plot(real(loop6),imag(loop6),'-o')
-%     
-%     axis(movie_axes);     % set axes as in movie_axes
-%     Movie(m) = getframe;  % save frame to a variable Film
-% end
-% 
-% % save movie
-% save fourbar_movie Movie
-% %close(10)
-% 
-% 
-% 
-% %% *** plot figures ***
-% 
-% if fig_kin_4bar
-%     
-%     %plot assembly at a certain timestep 
-%     index = 1; %select 1st timestep
-%    
-%     B = A + AB * exp(j*phi2(index));
-%     D = B + BD * exp(j*phi3(index));
-%     
-%     Fv = G + FpG * exp(j*phi6(index));
-%     F = Fv + Fp * exp(j*(phi6(index)-pi/2));
-%     E = F - EF * exp(j*phi5(index));
-%     Ev = E - Ep * exp(j*(phi4(index)-pi/2));
-%     
-%     K = Ev + (CK-CEp) * exp(j*phi4(index));
-%     Iv = K + IpK * exp(j*phi8(index));
-%     I = Iv + Ip * exp(j*(phi8(index)-pi/2));
-%     H = Fv + (GH-FpG) * exp(j*phi6(index));
-%     Lv8 = K + KLp8 * exp(j*phi8(index));
-%     L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
-%     Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
-%     
-%     J = H + (HI - IJ) * exp(j*phi7(index));
-%     N = J + JN * exp(j*phi9(index));
-%     O = N + NO * exp(j*phi10(index));
-%     P = O + OP * exp(j*phi11(index));
-%     
-%     M = K + KM * exp(j*phi8(index));
-%     
-%     
-%     figure()
-%     loop1 = [A B D C];
-%     loop2 = [G Fv F E Ev C];
-%     loop3 = [Lv8 L Lv10 O P];
-%     loop4 = [Lv8 L Lv10 N J I Iv];
-%     loop5 = [Iv I H Fv F E Ev K];
-%     loop6 = [K M];
-%     plot(real(loop1),imag(loop1),'ro-')
-%     hold on
-%     plot(real(loop2),imag(loop2),'ro-')
-%     plot(real(loop3),imag(loop3),'ro-')
-%     plot(real(loop4),imag(loop4),'ro-')
-%     plot(real(loop5),imag(loop5),'ro-')
-%     plot(real(loop6),imag(loop6),'ro-')
-%     xlabel('[m]')
-%     ylabel('[m]')
-%     title('assembly')
-%     axis equal
-%     
-%     plot_kin(t,phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4)
-%     plot_kin(t,phi5,phi6,phi7,dphi5,dphi6,dphi7,ddphi5,ddphi6,ddphi7)
-%     plot_kin(t,phi8,phi9,phi10,dphi8,dphi9,dphi10,ddphi8,ddphi9,ddphi10)
-% end
+A = 0;
+C = ACx + j*ACy;
+G = AGx + j*AGy;
+KM = KLp8 + 7.514;
+% point S = fixed
+
+% define which positions we want as frames in our movie
+frames = 60;    % number of frames in movie
+delta = floor(t_size/frames); % time between frames
+index_vec = [1:delta:t_size]';
+
+% Create a window large enough for the whole mechanisme in all positions, to prevent scrolling.
+% This is done by plotting a diagonal from (x_left, y_bottom) to (x_right, y_top), setting the
+% axes equal and saving the axes into "movie_axes", so that "movie_axes" can be used for further
+% plots.
+x_left = -40;
+y_bottom = -20;
+x_right = 5;
+y_top = 20;
+
+figure(10)
+hold on
+plot([x_left, x_right], [y_bottom, y_top]);
+axis equal;
+movie_axes = axis;   %save current axes into movie_axes
+
+% draw and save movie frame
+for m=1:length(index_vec)
+    index = index_vec(m);
+    
+    B = A + AB * exp(j*phi2(index));
+    D = B + BD * exp(j*phi3(index));
+    
+    Fv = G + FpG * exp(j*phi6(index));
+    F = Fv + Fp * exp(j*(phi6(index)-pi/2));
+    E = F - EF * exp(j*phi5(index));
+    Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+    
+    K = Ev + (CK-CEp) * exp(j*phi4(index));
+    Iv = K + IpK * exp(j*phi8(index));
+    I = Iv + Ip * exp(j*(phi8(index)-pi/2));
+    H = Fv + (GH-FpG) * exp(j*phi6(index));
+    Lv8 = K + KLp8 * exp(j*phi8(index));
+    L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
+    Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+    
+    J = H + (HI - IJ) * exp(j*phi7(index));
+    N = J + JN * exp(j*phi9(index));
+    O = N + NO * exp(j*phi10(index));
+    P = O + OP * exp(j*phi11(index));
+    
+    M = K + KM * exp(j*phi8(index));
+    
+    
+    loop1 = [A B D C];
+    loop2 = [G Fv F E Ev C];
+    loop3 = [Lv8 L Lv10 O P];
+    loop4 = [Lv8 L Lv10 N J I Iv];
+    loop5 = [Iv I H Fv F E Ev K];
+    loop6 = [K M];
+    
+    figure(10)
+    clf
+    hold on
+    plot(real(loop1),imag(loop1),'-o')
+    hold on 
+    plot(real(loop2),imag(loop2),'-o')
+    plot(real(loop3),imag(loop3),'-o')
+    plot(real(loop4),imag(loop4),'-o')
+    plot(real(loop5),imag(loop5),'-o')
+    plot(real(loop6),imag(loop6),'-o')
+    
+    axis(movie_axes);     % set axes as in movie_axes
+    Movie(m) = getframe;  % save frame to a variable Film
+end
+
+% save movie
+save fourbar_movie Movie
+%close(10)
+
+
+
+%% *** plot figures ***
+
+if fig_kin_4bar
+    
+    %plot assembly at a certain timestep 
+    index = 1; %select 1st timestep
+   
+    B = A + AB * exp(j*phi2(index));
+    D = B + BD * exp(j*phi3(index));
+    
+    Fv = G + FpG * exp(j*phi6(index));
+    F = Fv + Fp * exp(j*(phi6(index)-pi/2));
+    E = F - EF * exp(j*phi5(index));
+    Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+    
+    K = Ev + (CK-CEp) * exp(j*phi4(index));
+    Iv = K + IpK * exp(j*phi8(index));
+    I = Iv + Ip * exp(j*(phi8(index)-pi/2));
+    H = Fv + (GH-FpG) * exp(j*phi6(index));
+    Lv8 = K + KLp8 * exp(j*phi8(index));
+    L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
+    Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+    
+    J = H + (HI - IJ) * exp(j*phi7(index));
+    N = J + JN * exp(j*phi9(index));
+    O = N + NO * exp(j*phi10(index));
+    P = O + OP * exp(j*phi11(index));
+    
+    M = K + KM * exp(j*phi8(index));
+    
+    
+    figure()
+    loop1 = [A B D C];
+    loop2 = [G Fv F E Ev C];
+    loop3 = [Lv8 L Lv10 O P];
+    loop4 = [Lv8 L Lv10 N J I Iv];
+    loop5 = [Iv I H Fv F E Ev K];
+    loop6 = [K M];
+    plot(real(loop1),imag(loop1),'ro-')
+    hold on
+    plot(real(loop2),imag(loop2),'ro-')
+    plot(real(loop3),imag(loop3),'ro-')
+    plot(real(loop4),imag(loop4),'ro-')
+    plot(real(loop5),imag(loop5),'ro-')
+    plot(real(loop6),imag(loop6),'ro-')
+    xlabel('[m]')
+    ylabel('[m]')
+    title('assembly')
+    axis equal
+    
+    %plot_kin(t,phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4)
+    %plot_kin(t,phi5,phi6,phi7,dphi5,dphi6,dphi7,ddphi5,ddphi6,ddphi7)
+    %plot_kin(t,phi8,phi9,phi10,dphi8,dphi9,dphi10,ddphi8,ddphi9,ddphi10)
+    plot_kin(t(1:600),ddphi3(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden3,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+    plot_kin(t(1:600),ddphi6(1:600),ddphi7(1:600),ddphi8(1:600),test_numeriek_afleiden6,test_numeriek_afleiden7,test_numeriek_afleiden8,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+    plot_kin(t(1:600),ddphi9(1:600),ddphi10(1:600),ddphi11(1:600),test_numeriek_afleiden9,test_numeriek_afleiden10,test_numeriek_afleiden11,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+    plot_kin(t(1:600),ddPLp8(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden12,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+end
 
 
 

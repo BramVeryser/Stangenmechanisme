@@ -128,157 +128,157 @@ cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= r
 
 
 % %Controle massacentra
-% index = 1;
-% A = 0;
-% C = ACx + j*ACy;
-% G = AGx + j*AGy;
-% KM = KLp8 + 7.514;
-%     B = A + AB * exp(j*phi2(index));
-%     D = B + BD * exp(j*phi3(index));
-%     
-%     Fv = G + FpG * exp(j*phi6(index));
-%     F = Fv + Fp * exp(j*(phi6(index)-pi/2));
-%     E = F - EF * exp(j*phi5(index));
-%     Ev = E - Ep * exp(j*(phi4(index)-pi/2));
-%     
-%     K = Ev + (CK-CEp) * exp(j*phi4(index));
-%     Iv = K + IpK * exp(j*phi8(index));
-%     I = Iv + Ip * exp(j*(phi8(index)-pi/2));
-%     H = Fv + (GH-FpG) * exp(j*phi6(index));
-%     Lv8 = K + KLp8 * exp(j*phi8(index));
-%     L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
-%     Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
-%     
-%     J = H + (HI - IJ) * exp(j*phi7(index));
-%     N = J + JN * exp(j*phi9(index));
-%     O = N + NO * exp(j*phi10(index));
-%     P = O + OP * exp(j*phi11(index));
-%     
-%     M = K + KM * exp(j*phi8(index));
-% 
-% figure(2)
-% cog2 = A - cog2_A(index);
-% stang2 = [A B];
-% stang2A= [cog2 cog2+cog2_A(index)];
-% stang2B= [cog2 cog2+cog2_B(index)];
-% plot(real(stang2),imag(stang2),'b')
-% hold on
-% plot(real(stang2A),imag(stang2A),'ro-')
-% plot(real(stang2B),imag(stang2B),'ro-')
-% axis equal
-% 
-% figure(3)
-% cog3 = B - cog3_B(index);
-% stang3 = [B D];
-% stang3B= [cog3 cog3+cog3_B(index)];
-% stang3D= [cog3 cog3+cog3_D(index)];
-% plot(real(stang3),imag(stang3),'b')
-% hold on
-% plot(real(stang3B),imag(stang3B),'ro-')
-% plot(real(stang3D),imag(stang3D),'ro-')
-% axis equal
-% 
-% figure(4)
-% cog4 = C - cog4_C(index);
-% stang4 = [C D K Ev E];
-% stang4C= [cog4 cog4+cog4_C(index)];
-% stang4D= [cog4 cog4+cog4_D(index)];
-% stang4E= [cog4 cog4+cog4_E(index)];
-% stang4K= [cog4 cog4+cog4_K(index)];
-% plot(real(stang4),imag(stang4),'b')
-% hold on
-% plot(real(stang4C),imag(stang4C),'ro-')
-% plot(real(stang4D),imag(stang4D),'ro-')
-% plot(real(stang4E),imag(stang4E),'ro-')
-% plot(real(stang4K),imag(stang4K),'ro-')
-% axis equal
-% 
-% figure(5)
-% cog5 = E - cog5_E(index);
-% stang5 = [E F];
-% stang5E= [cog5 cog5+cog5_E(index)];
-% stang5F= [cog5 cog5+cog5_F(index)];
-% plot(real(stang5),imag(stang5),'b')
-% hold on
-% plot(real(stang5E),imag(stang5E),'ro-')
-% plot(real(stang5F),imag(stang5F),'ro-')
-% axis equal
-% 
-% figure(6)
-% cog6 = G - cog6_G(index);
-% stang6 = [G H Fv F];
-% stang6G= [cog6 cog6+cog6_G(index)];
-% stang6H= [cog6 cog6+cog6_H(index)];
-% stang6F= [cog6 cog6+cog6_F(index)];
-% plot(real(stang6),imag(stang6),'b')
-% hold on
-% plot(real(stang6G),imag(stang6G),'ro-')
-% plot(real(stang6H),imag(stang6H),'ro-')
-% plot(real(stang6F),imag(stang6F),'ro-')
-% axis equal
-% 
-% figure(7)
-% cog7 = H - cog7_H(index);
-% stang7 = [H I];
-% stang7H= [cog7 cog7+cog7_H(index)];
-% stang7I= [cog7 cog7+cog7_I(index)];
-% stang7J= [cog7 cog7+cog7_J(index)];
-% plot(real(stang7),imag(stang7),'b')
-% hold on
-% plot(real(stang7H),imag(stang7H),'ro-')
-% plot(real(stang7I),imag(stang7I),'ro-')
-% plot(real(stang7J),imag(stang7J),'ro-')
-% axis equal
-% 
-% figure(8)
-% cog8 = K - cog8_K(index);
-% stang8 = [K M Lv8 L Lv8 Iv I];
-% stang8K= [cog8 cog8+cog8_K(index)];
-% stang8I= [cog8 cog8+cog8_I(index)];
-% stang8L= [cog8 cog8+cog8_L(index)];
-% stang8P= [cog8 cog8+cog8_P(index)];
-% plot(real(stang8),imag(stang8),'b')
-% hold on
-% plot(real(stang8K),imag(stang8K),'ro-')
-% plot(real(stang8I),imag(stang8I),'ro-')
-% plot(real(stang8L),imag(stang8L),'ro-')
-% plot(real(stang8P),imag(stang8P),'ro-')
-% axis equal
-% 
-% figure(9)
-% cog9 = J - cog9_J(index);
-% stang9 = [J N];
-% stang9J= [cog9 cog9+cog9_J(index)];
-% stang9N= [cog9 cog9+cog9_N(index)];
-% plot(real(stang9),imag(stang9),'b')
-% hold on
-% plot(real(stang9J),imag(stang9J),'ro-')
-% plot(real(stang9N),imag(stang9N),'ro-')
-% axis equal
-% 
-% figure(10)
-% cog10 = N - cog10_N(index);
-% stang10 = [N O Lv10 L];
-% stang10N= [cog10 cog10+cog10_N(index)];
-% stang10L= [cog10 cog10+cog10_L(index)];
-% stang10O= [cog10 cog10+cog10_O(index)];
-% plot(real(stang10),imag(stang10),'b')
-% hold on
-% plot(real(stang10N),imag(stang10N),'ro-')
-% plot(real(stang10L),imag(stang10L),'ro-')
-% plot(real(stang10O),imag(stang10O),'ro-')
-% axis equal
-% 
-% figure(11)
-% cog11 = O - cog11_O(index);
-% stang11 = [O P];
-% stang11O= [cog11 cog11+cog11_O(index)];
-% stang11P= [cog11 cog11+cog11_P(index)];
-% plot(real(stang11),imag(stang11),'b')
-% hold on
-% plot(real(stang11O),imag(stang11O),'ro-')
-% plot(real(stang11P),imag(stang11P),'ro-')
-% axis equal
+% % index = 1;
+% % A = 0;
+% % C = ACx + j*ACy;
+% % G = AGx + j*AGy;
+% % KM = KLp8 + 7.514;
+% %     B = A + AB * exp(j*phi2(index));
+% %     D = B + BD * exp(j*phi3(index));
+% %     
+% %     Fv = G + FpG * exp(j*phi6(index));
+% %     F = Fv + Fp * exp(j*(phi6(index)-pi/2));
+% %     E = F - EF * exp(j*phi5(index));
+% %     Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+% %     
+% %     K = Ev + (CK-CEp) * exp(j*phi4(index));
+% %     Iv = K + IpK * exp(j*phi8(index));
+% %     I = Iv + Ip * exp(j*(phi8(index)-pi/2));
+% %     H = Fv + (GH-FpG) * exp(j*phi6(index));
+% %     Lv8 = K + KLp8 * exp(j*phi8(index));
+% %     L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
+% %     Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+% %     
+% %     J = H + (HI - IJ) * exp(j*phi7(index));
+% %     N = J + JN * exp(j*phi9(index));
+% %     O = N + NO * exp(j*phi10(index));
+% %     P = O + OP * exp(j*phi11(index));
+% %     
+% %     M = K + KM * exp(j*phi8(index));
+% % 
+% % figure(2)
+% % cog2 = A - cog2_A(index);
+% % stang2 = [A B];
+% % stang2A= [cog2 cog2+cog2_A(index)];
+% % stang2B= [cog2 cog2+cog2_B(index)];
+% % plot(real(stang2),imag(stang2),'b')
+% % hold on
+% % plot(real(stang2A),imag(stang2A),'ro-')
+% % plot(real(stang2B),imag(stang2B),'ro-')
+% % axis equal
+% % 
+% % figure(3)
+% % cog3 = B - cog3_B(index);
+% % stang3 = [B D];
+% % stang3B= [cog3 cog3+cog3_B(index)];
+% % stang3D= [cog3 cog3+cog3_D(index)];
+% % plot(real(stang3),imag(stang3),'b')
+% % hold on
+% % plot(real(stang3B),imag(stang3B),'ro-')
+% % plot(real(stang3D),imag(stang3D),'ro-')
+% % axis equal
+% % 
+% % figure(4)
+% % cog4 = C - cog4_C(index);
+% % stang4 = [C D K Ev E];
+% % stang4C= [cog4 cog4+cog4_C(index)];
+% % stang4D= [cog4 cog4+cog4_D(index)];
+% % stang4E= [cog4 cog4+cog4_E(index)];
+% % stang4K= [cog4 cog4+cog4_K(index)];
+% % plot(real(stang4),imag(stang4),'b')
+% % hold on
+% % plot(real(stang4C),imag(stang4C),'ro-')
+% % plot(real(stang4D),imag(stang4D),'ro-')
+% % plot(real(stang4E),imag(stang4E),'ro-')
+% % plot(real(stang4K),imag(stang4K),'ro-')
+% % axis equal
+% % 
+% % figure(5)
+% % cog5 = E - cog5_E(index);
+% % stang5 = [E F];
+% % stang5E= [cog5 cog5+cog5_E(index)];
+% % stang5F= [cog5 cog5+cog5_F(index)];
+% % plot(real(stang5),imag(stang5),'b')
+% % hold on
+% % plot(real(stang5E),imag(stang5E),'ro-')
+% % plot(real(stang5F),imag(stang5F),'ro-')
+% % axis equal
+% % 
+% % figure(6)
+% % cog6 = G - cog6_G(index);
+% % stang6 = [G H Fv F];
+% % stang6G= [cog6 cog6+cog6_G(index)];
+% % stang6H= [cog6 cog6+cog6_H(index)];
+% % stang6F= [cog6 cog6+cog6_F(index)];
+% % plot(real(stang6),imag(stang6),'b')
+% % hold on
+% % plot(real(stang6G),imag(stang6G),'ro-')
+% % plot(real(stang6H),imag(stang6H),'ro-')
+% % plot(real(stang6F),imag(stang6F),'ro-')
+% % axis equal
+% % 
+% % figure(7)
+% % cog7 = H - cog7_H(index);
+% % stang7 = [H I];
+% % stang7H= [cog7 cog7+cog7_H(index)];
+% % stang7I= [cog7 cog7+cog7_I(index)];
+% % stang7J= [cog7 cog7+cog7_J(index)];
+% % plot(real(stang7),imag(stang7),'b')
+% % hold on
+% % plot(real(stang7H),imag(stang7H),'ro-')
+% % plot(real(stang7I),imag(stang7I),'ro-')
+% % plot(real(stang7J),imag(stang7J),'ro-')
+% % axis equal
+% % 
+% % figure(8)
+% % cog8 = K - cog8_K(index);
+% % stang8 = [K M Lv8 L Lv8 Iv I];
+% % stang8K= [cog8 cog8+cog8_K(index)];
+% % stang8I= [cog8 cog8+cog8_I(index)];
+% % stang8L= [cog8 cog8+cog8_L(index)];
+% % stang8P= [cog8 cog8+cog8_P(index)];
+% % plot(real(stang8),imag(stang8),'b')
+% % hold on
+% % plot(real(stang8K),imag(stang8K),'ro-')
+% % plot(real(stang8I),imag(stang8I),'ro-')
+% % plot(real(stang8L),imag(stang8L),'ro-')
+% % plot(real(stang8P),imag(stang8P),'ro-')
+% % axis equal
+% % 
+% % figure(9)
+% % cog9 = J - cog9_J(index);
+% % stang9 = [J N];
+% % stang9J= [cog9 cog9+cog9_J(index)];
+% % stang9N= [cog9 cog9+cog9_N(index)];
+% % plot(real(stang9),imag(stang9),'b')
+% % hold on
+% % plot(real(stang9J),imag(stang9J),'ro-')
+% % plot(real(stang9N),imag(stang9N),'ro-')
+% % axis equal
+% % 
+% % figure(10)
+% % cog10 = N - cog10_N(index);
+% % stang10 = [N O Lv10 L];
+% % stang10N= [cog10 cog10+cog10_N(index)];
+% % stang10L= [cog10 cog10+cog10_L(index)];
+% % stang10O= [cog10 cog10+cog10_O(index)];
+% % plot(real(stang10),imag(stang10),'b')
+% % hold on
+% % plot(real(stang10N),imag(stang10N),'ro-')
+% % plot(real(stang10L),imag(stang10L),'ro-')
+% % plot(real(stang10O),imag(stang10O),'ro-')
+% % axis equal
+% % 
+% % figure(11)
+% % cog11 = O - cog11_O(index);
+% % stang11 = [O P];
+% % stang11O= [cog11 cog11+cog11_O(index)];
+% % stang11P= [cog11 cog11+cog11_P(index)];
+% % plot(real(stang11),imag(stang11),'b')
+% % hold on
+% % plot(real(stang11O),imag(stang11O),'ro-')
+% % plot(real(stang11P),imag(stang11P),'ro-')
+% % axis equal
 
 
 
