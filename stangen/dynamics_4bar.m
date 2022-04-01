@@ -12,7 +12,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [F] = ...
+function [vel,acc,F] = ...
 dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
@@ -129,7 +129,7 @@ cog11_O= -OP/2*exp(j*phi11);                                        cog11_O_x= r
 cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= real(cog11_P);cog11_P_y= imag(cog11_P);
 
 
-% %Controle massacentra
+%% Controle massacentra
 % % index = 1;
 % % A = 0;
 % % C = ACx + j*ACy;
@@ -284,7 +284,7 @@ cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= r
 
 
 
-% 3D omega (dphi) and alpha (ddphi) vectors)
+%% 3D omega (dphi) and alpha (ddphi) vectors)
 omega2 = [zeros(size(phi2)) zeros(size(phi2)) dphi2];
 omega3 = [zeros(size(phi2)) zeros(size(phi2)) dphi3];
 omega4 = [zeros(size(phi2)) zeros(size(phi2)) dphi4];
@@ -327,6 +327,48 @@ H_J_vec     = H_cog7_vec + [cog7_J_x cog7_J_y zeros(size(phi2))];
 J_N_vec     = J_cog9_vec + [cog9_N_x cog9_N_y zeros(size(phi2))];
 N_O_vec     = N_cog10_vec+ [cog10_O_x cog10_O_y zeros(size(phi2))];
 
+% velocity vectors
+vel_B = cross(omega2,A_B_vec);
+vel_E = cross(omega4,C_E_vec);
+vel_H = cross(omega6,G_H_vec);
+vel_K = cross(omega4,C_K_vec);
+vel_J = vel_H + cross(omega7,H_J_vec);
+vel_N = vel_J + cross(omega9,J_N_vec);
+vel_O = vel_N + cross(omega10,N_O_vec);
+
+vel_2 =     cross(omega2,A_cog2_vec);
+vel_3 =     vel_B + cross(omega,B_cog3_vec);
+vel_4 =     cross(omega4,C_cog4_vec);
+vel_5 =     vel_E + + cross(omega5,E_cog5_vec);
+vel_6 =     cross(omega6,G_cog6_vec);
+vel_7 =     vel_H + cross(omega7,H_cog7_vec);
+vel_8 =     vel_K + cross(omega8,K_cog8_vec);
+vel_9 =     vel_J + cross(omega,J_cog9_vec);
+vel_10 =    vel_N + cross(omega10,N_cog10_vec);
+vel_11 =    vel_O + cross(omega11,O_cog11_vec);
+
+vel_2x = vel_2(:,1);
+vel_2y = vel_2(:,2);
+vel_3x = vel_3(:,1);
+vel_3y = vel_3(:,2);
+vel_4x = vel_4(:,1);
+vel_4y = vel_4(:,2);
+vel_5x = vel_5(:,1);
+vel_5y = vel_5(:,2);
+vel_6x = vel_6(:,1);
+vel_6y = vel_6(:,2);
+vel_7x = vel_7(:,1);
+vel_7y = vel_7(:,2);
+vel_8x = vel_8(:,1);
+vel_8y = vel_8(:,2);
+vel_9x = vel_9(:,1);
+vel_9y = vel_9(:,2);
+vel_10x = vel_10(:,1);
+vel_10y = vel_10(:,2);
+vel_11x = vel_11(:,1);
+vel_11y = vel_11(:,2);
+
+vel = [vel_2x;vel_2y; vel_3x;vel_3y; vel_4x;vel_4y; vel_5x;vel_5y; vel_6x;vel_6y; vel_7x;vel_7y; vel_8x;vel_8y; vel_9x;vel_9y; vel_10x;vel_10y; vel_11x;vel_11y];
 % acceleration vectors
 acc_B =     cross(omega2,cross(omega2,A_B_vec))+cross(alpha2,A_B_vec);%
 acc_E =     cross(omega4,cross(omega4,C_E_vec))+cross(alpha4,C_E_vec);%
@@ -368,11 +410,13 @@ acc_10y = acc_10(:,2);
 acc_11x = acc_11(:,1);
 acc_11y = acc_11(:,2);
 
+acc =  [acc_2x;acc_2y; acc_3x;acc_3y; acc_4x;acc_4y; acc_5x;acc_5y; acc_6x;acc_6y; acc_7x;acc_7y; acc_8x;acc_8y; acc_9x;acc_9y; acc_10x;acc_10y; acc_11x;acc_11y];
+
 % **********************
 % *** force analysis ***
 % **********************
 
-% allocate matrices for force (F) and moment (M)
+%% allocate matrices for force (F) and moment (M)
 F_A_x = zeros(size(phi2));
 F_A_y = zeros(size(phi2));
 F_B_x = zeros(size(phi2));
@@ -404,19 +448,10 @@ F_O_x = zeros(size(phi2));
 F_P = zeros(size(phi2));
 M_A = zeros(size(phi2));
 
-% calculate dynamics for each time step
+%% calculate dynamics for each time step
 t_size = size(t,1);    % number of simulation steps
 for k=1:t_size
-%   A = [ 1           0            1            0            0            0            0           0           0;
-%         0           1            0            1            0            0            0           0           0;
-%         0           0           -1            0           -1            0            0           0           0;
-%         0           0            0           -1            0           -1            0           0           0;
-%         0           0            0            0            1            0            1           0           0;
-%         0           0            0            0            0            1            0           1           0;
-%        -cog2_P_y(k) cog2_P_x(k) -cog2_Q_y(k)  cog2_Q_x(k)  0            0            0           0           1;
-%         0           0            cog3_Q_y(k) -cog3_Q_x(k)  cog3_R_y(k) -cog3_R_x(k)  0           0           0;
-%         0           0            0            0           -cog4_R_y(k)  cog4_R_x(k) -cog4_S_y(k) cog4_S_x(k) 0];
-%   
+   
 
   A_excel = xlsread('matrix.xlsx','B2:AC21');
   A_rechts = [zeros(12,1);cos(phi8(k)-pi/2);sin(phi8(k)-pi/2);zeros(4,1);-cos(phi8(k)-pi/2);-sin(phi8(k)-pi/2)];
@@ -508,7 +543,7 @@ end
 F = [F_A_x, F_A_y, F_B_x, F_B_y, F_C_x, F_C_y, F_D_x, F_D_y, F_E_x, F_E_y, F_F_x, F_F_y, F_G_x, F_G_y, F_H_x, F_H_y, F_I_x, F_I_y, F_J_x,  F_J_y, F_K_x, F_K_y, F_L_x, F_L_y, F_N_y, F_N_x, F_O_y, F_O_x, F_P, M_A];
 
 % **********************
-% *** plot figures ***
+%% ** plot figures ***
 % **********************
 
 if fig_dyn_4bar
