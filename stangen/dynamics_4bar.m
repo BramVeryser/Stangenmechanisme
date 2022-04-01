@@ -82,6 +82,8 @@ m9 = m(8);
 m10 = m(9);
 m11 = m(10);
 
+g = 9.81;
+
 % a lot of definitions to make the matrix A and B a bit clear.
 % skip the definitions for now (move down to "force analysis")
 % and check them when you need them.
@@ -436,25 +438,25 @@ for k=1:t_size
   A = [A_boven;A_onder];
   
   B = [ m2*acc_2x(k);
-        m2*acc_2y(k);
+        m2*(acc_2y(k)+g);
         m3*acc_3x(k);
-        m3*acc_3y(k);
+        m3*(acc_3y(k)+g);
         m4*acc_4x(k);
-        m4*acc_4y(k);
+        m4*(acc_4y(k)+g);
         m5*acc_5x(k);
-        m5*acc_5y(k);
+        m5*(acc_5y(k)+g);
         m6*acc_6x(k);
-        m6*acc_6y(k);
+        m6*(acc_6y(k)+g);
         m7*acc_7x(k);
-        m7*acc_7y(k);
+        m7*(acc_7y(k)+g);
         m8*acc_8x(k);
-        m8*acc_8y(k);
+        m8*(acc_8y(k)+g);
         m9*acc_9x(k);
-        m9*acc_9y(k);
+        m9*(acc_9y(k)+g);
         m10*acc_10x(k);
-        m10*acc_10y(k);
+        m10*(acc_10y(k)+g);
         m11*acc_11x(k);
-        m11*acc_11y(k);
+        m11*(acc_11y(k)+g);
         J2*ddphi2(k);
         J3*ddphi3(k);
         J4*ddphi4(k)

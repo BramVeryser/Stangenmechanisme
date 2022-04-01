@@ -20,7 +20,7 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % program data
-fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
+fig_kin_4bar = 0;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
@@ -82,16 +82,16 @@ m10 = 1;
 m11 = 1;
 m = [m2 m3 m4 m5 m6 m7 m8 m9 m10 m11];
 
-J2 = 1;
-J3 = 1;
-J4 = 1;
-J5 = 1;
-J6 = 1;
-J7 = 1;
-J8 = 1;
-J9 = 1;
-J10 = 1;
-J11 = 1;
+J2 = 0.001;
+J3 = 0.001;
+J4 = 0.001;
+J5 = 0.001;
+J6 = 0.001;
+J7 = 0.001;
+J8 = 0.001;
+J9 = 0.001;
+J10 = 0.001;
+J11 = 0.001;
 
 J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11];
 
@@ -117,7 +117,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 30;                    % end time of simulation
+t_end = 15;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -138,7 +138,7 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % calculation of the dynamics (see dyn_4bar.m)
-%[F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar);
+[F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

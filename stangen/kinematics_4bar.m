@@ -225,7 +225,7 @@ for k=1:t_size
 
     assert(norm(A*x-B) < 10^(-10),"numeriek niet stabiel")
     
-    if (k ~= 1)
+%     if (k ~= 1)
 %         test_numeriek_afleiden3(k-1) = (phi3(k)- phi3(k-1))/Ts; 
 %         test_numeriek_afleiden4(k-1) = (phi4(k)- phi4(k-1))/Ts;
 %         test_numeriek_afleiden5(k-1) = (phi5(k)- phi5(k-1))/Ts;
@@ -237,19 +237,19 @@ for k=1:t_size
 %         test_numeriek_afleiden11(k-1) = (phi11(k)- phi11(k-1))/Ts;
 %         test_numeriek_afleiden12(k-1) = (PLp8(k)- PLp8(k-1))/Ts;
         
-        test_numeriek_afleiden3(k-1) = (dphi3(k)- dphi3(k-1))/Ts; 
-        test_numeriek_afleiden4(k-1) = (dphi4(k)- dphi4(k-1))/Ts;
-        test_numeriek_afleiden5(k-1) = (dphi5(k)- dphi5(k-1))/Ts;
-        test_numeriek_afleiden6(k-1) = (dphi6(k)- dphi6(k-1))/Ts;
-        test_numeriek_afleiden7(k-1) = (dphi7(k)- dphi7(k-1))/Ts;
-        test_numeriek_afleiden8(k-1) = (dphi8(k)- dphi8(k-1))/Ts;
-        test_numeriek_afleiden9(k-1) = (dphi9(k)- dphi9(k-1))/Ts;
-        test_numeriek_afleiden10(k-1) = (dphi10(k)- dphi10(k-1))/Ts;
-        test_numeriek_afleiden11(k-1) = (dphi11(k)- dphi11(k-1))/Ts;
-        test_numeriek_afleiden12(k-1) = (dPLp8(k)- dPLp8(k-1))/Ts;
+%         test_numeriek_afleiden3(k-1) = (dphi3(k)- dphi3(k-1))/Ts; 
+%         test_numeriek_afleiden4(k-1) = (dphi4(k)- dphi4(k-1))/Ts;
+%         test_numeriek_afleiden5(k-1) = (dphi5(k)- dphi5(k-1))/Ts;
+%         test_numeriek_afleiden6(k-1) = (dphi6(k)- dphi6(k-1))/Ts;
+%         test_numeriek_afleiden7(k-1) = (dphi7(k)- dphi7(k-1))/Ts;
+%         test_numeriek_afleiden8(k-1) = (dphi8(k)- dphi8(k-1))/Ts;
+%         test_numeriek_afleiden9(k-1) = (dphi9(k)- dphi9(k-1))/Ts;
+%         test_numeriek_afleiden10(k-1) = (dphi10(k)- dphi10(k-1))/Ts;
+%         test_numeriek_afleiden11(k-1) = (dphi11(k)- dphi11(k-1))/Ts;
+%         test_numeriek_afleiden12(k-1) = (dPLp8(k)- dPLp8(k-1))/Ts;
         
         
-    end
+%     end
  
 end % loop over positions
 
@@ -393,13 +393,13 @@ if fig_kin_4bar
     title('assembly')
     axis equal
     
-    %plot_kin(t,phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4)
-    %plot_kin(t,phi5,phi6,phi7,dphi5,dphi6,dphi7,ddphi5,ddphi6,ddphi7)
-    %plot_kin(t,phi8,phi9,phi10,dphi8,dphi9,dphi10,ddphi8,ddphi9,ddphi10)
-    plot_kin(t(1:600),ddphi3(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden3,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
-    plot_kin(t(1:600),ddphi6(1:600),ddphi7(1:600),ddphi8(1:600),test_numeriek_afleiden6,test_numeriek_afleiden7,test_numeriek_afleiden8,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
-    plot_kin(t(1:600),ddphi9(1:600),ddphi10(1:600),ddphi11(1:600),test_numeriek_afleiden9,test_numeriek_afleiden10,test_numeriek_afleiden11,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
-    plot_kin(t(1:600),ddPLp8(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden12,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+    plot_kin(t,phi2,phi3,phi4,dphi2,dphi3,dphi4,ddphi2,ddphi3,ddphi4)
+    plot_kin(t,phi5,phi6,phi7,dphi5,dphi6,dphi7,ddphi5,ddphi6,ddphi7)
+    plot_kin(t,phi8,phi9,phi10,dphi8,dphi9,dphi10,ddphi8,ddphi9,ddphi10)
+%     plot_kin(t(1:600),ddphi3(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden3,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+%     plot_kin(t(1:600),ddphi6(1:600),ddphi7(1:600),ddphi8(1:600),test_numeriek_afleiden6,test_numeriek_afleiden7,test_numeriek_afleiden8,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+%     plot_kin(t(1:600),ddphi9(1:600),ddphi10(1:600),ddphi11(1:600),test_numeriek_afleiden9,test_numeriek_afleiden10,test_numeriek_afleiden11,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+%     plot_kin(t(1:600),ddPLp8(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden12,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
 end
 
 
