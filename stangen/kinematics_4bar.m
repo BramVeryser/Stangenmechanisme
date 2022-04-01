@@ -258,8 +258,7 @@ phi = [phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11,PLp8];
 dphi = [dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11,dPLp8];
 ddphi = [ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11,ddPLp8];
 % *** create movie ***
-
-% point P = fixed
+if fig_kin_4bar
 
 A = 0;
 C = ACx + j*ACy;
@@ -286,6 +285,7 @@ hold on
 plot([x_left, x_right], [y_bottom, y_top]);
 axis equal;
 movie_axes = axis;   %save current axes into movie_axes
+
 
 % draw and save movie frame
 for m=1:length(index_vec)
@@ -335,7 +335,7 @@ for m=1:length(index_vec)
     
     axis(movie_axes);     % set axes as in movie_axes
     Movie(m) = getframe;  % save frame to a variable Film
-end
+
 
 % save movie
 save fourbar_movie Movie
@@ -345,7 +345,6 @@ save fourbar_movie Movie
 
 %% *** plot figures ***
 
-if fig_kin_4bar
     
     %plot assembly at a certain timestep 
     index = 1; %select 1st timestep
@@ -400,6 +399,7 @@ if fig_kin_4bar
 %     plot_kin(t(1:600),ddphi6(1:600),ddphi7(1:600),ddphi8(1:600),test_numeriek_afleiden6,test_numeriek_afleiden7,test_numeriek_afleiden8,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
 %     plot_kin(t(1:600),ddphi9(1:600),ddphi10(1:600),ddphi11(1:600),test_numeriek_afleiden9,test_numeriek_afleiden10,test_numeriek_afleiden11,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
 %     plot_kin(t(1:600),ddPLp8(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden12,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
+end
 end
 
 

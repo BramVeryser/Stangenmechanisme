@@ -13,7 +13,7 @@
 
 
 function [vel,acc,F] = ...
-dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar)
+dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
 CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
@@ -134,7 +134,7 @@ cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= r
 % % A = 0;
 % % C = ACx + j*ACy;
 % % G = AGx + j*AGy;
-% % KM = KLp8 + 7.514;
+% % KM = KLp8 + 7.514*S;
 % %     B = A + AB * exp(j*phi2(index));
 % %     D = B + BD * exp(j*phi3(index));
 % %     
@@ -337,13 +337,13 @@ vel_N = vel_J + cross(omega9,J_N_vec);
 vel_O = vel_N + cross(omega10,N_O_vec);
 
 vel_2 =     cross(omega2,A_cog2_vec);
-vel_3 =     vel_B + cross(omega,B_cog3_vec);
+vel_3 =     vel_B + cross(omega3,B_cog3_vec);
 vel_4 =     cross(omega4,C_cog4_vec);
 vel_5 =     vel_E + + cross(omega5,E_cog5_vec);
 vel_6 =     cross(omega6,G_cog6_vec);
 vel_7 =     vel_H + cross(omega7,H_cog7_vec);
 vel_8 =     vel_K + cross(omega8,K_cog8_vec);
-vel_9 =     vel_J + cross(omega,J_cog9_vec);
+vel_9 =     vel_J + cross(omega9,J_cog9_vec);
 vel_10 =    vel_N + cross(omega10,N_cog10_vec);
 vel_11 =    vel_O + cross(omega11,O_cog11_vec);
 
@@ -368,7 +368,7 @@ vel_10y = vel_10(:,2);
 vel_11x = vel_11(:,1);
 vel_11y = vel_11(:,2);
 
-vel = [vel_2x;vel_2y; vel_3x;vel_3y; vel_4x;vel_4y; vel_5x;vel_5y; vel_6x;vel_6y; vel_7x;vel_7y; vel_8x;vel_8y; vel_9x;vel_9y; vel_10x;vel_10y; vel_11x;vel_11y];
+vel = [vel_2x,vel_2y, vel_3x,vel_3y, vel_4x,vel_4y, vel_5x,vel_5y, vel_6x,vel_6y, vel_7x,vel_7y, vel_8x,vel_8y, vel_9x,vel_9y, vel_10x,vel_10y, vel_11x,vel_11y];
 % acceleration vectors
 acc_B =     cross(omega2,cross(omega2,A_B_vec))+cross(alpha2,A_B_vec);%
 acc_E =     cross(omega4,cross(omega4,C_E_vec))+cross(alpha4,C_E_vec);%
@@ -410,7 +410,7 @@ acc_10y = acc_10(:,2);
 acc_11x = acc_11(:,1);
 acc_11y = acc_11(:,2);
 
-acc =  [acc_2x;acc_2y; acc_3x;acc_3y; acc_4x;acc_4y; acc_5x;acc_5y; acc_6x;acc_6y; acc_7x;acc_7y; acc_8x;acc_8y; acc_9x;acc_9y; acc_10x;acc_10y; acc_11x;acc_11y];
+acc =  [acc_2x,acc_2y, acc_3x,acc_3y, acc_4x,acc_4y, acc_5x,acc_5y, acc_6x,acc_6y, acc_7x,acc_7y, acc_8x,acc_8y, acc_9x,acc_9y, acc_10x,acc_10y, acc_11x,acc_11y];
 
 % **********************
 % *** force analysis ***
@@ -464,7 +464,7 @@ for k=1:t_size
   M5 = [zeros(1,8)  cog5_E_y(k)       -cog5_E_x(k)    cog5_F_y(k)       -cog5_F_x(k)    zeros(1,18)];
   M6 = [zeros(1,10) -cog6_F_y(k)       cog6_F_x(k)    -cog6_G_y(k)       cog6_G_x(k)    -cog6_H_y(k)       cog6_H_x(k) zeros(1,14)];
   M7 = [zeros(1,14) cog7_H_y(k)       -cog7_H_x(k)      cog7_I_y(k)       -cog7_I_x(k)  cog7_J_y(k)       -cog7_J_x(k)  zeros(1,10)];
-  M8 = [zeros(1,16)     -cog8_I_y(k)       cog8_I_x(k)  0   0   cog8_K_x(k)    -cog8_K_y(k)     -cog8_L_y(k)       cog8_L_x(k) zeros(1,4)   -cog8_P_y(k)*cos(phi8(k)-pi/2)+cog8_P_x(k)*sin(phi8(k)-pi/2)    0];
+  M8 = [zeros(1,16)     -cog8_I_y(k)       cog8_I_x(k)  0   0   cog8_K_y(k)    -cog8_K_x(k)     -cog8_L_y(k)       cog8_L_x(k) zeros(1,4)   -cog8_P_y(k)*cos(phi8(k)-pi/2)+cog8_P_x(k)*sin(phi8(k)-pi/2)    0];
   M9 = [zeros(1,18)     -cog9_J_y(k)       cog9_J_x(k)  zeros(1,4)  -cog9_N_y(k)       cog9_N_x(k)  zeros(1,4)];
   M10 = [zeros(1,22)    cog10_L_y(k)       -cog10_L_x(k)    cog10_N_y(k)       -cog10_N_x(k)    cog10_O_y(k)       -cog10_O_x(k)    0   0];
   M11 = [zeros(1,26)    -cog11_O_y(k)   cog11_O_x(k)    cog11_P_y(k)*cos(phi8(k)-pi/2)-cog11_P_x(k)*sin(phi8(k)-pi/2) 0];
