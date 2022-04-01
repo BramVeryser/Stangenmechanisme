@@ -11,7 +11,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts)
+function [phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts,S)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
 CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
@@ -21,6 +21,7 @@ IpK= STANGEN(17);    JN= STANGEN(18);  NO=STANGEN(19);     Lp10=STANGEN(20);
 Lp10O=STANGEN(21);    OP=STANGEN(22);    ACx=STANGEN(23);    ACy=STANGEN(24);
 AGx=STANGEN(25);    AGy=STANGEN(26);
 
+KM = KLp8 + phi_init(10);
 Lp10N = NO - Lp10O;
 IpLp8 = KLp8 - IpK;
 FpH = GH - FpG;
@@ -263,8 +264,6 @@ if fig_kin_4bar
 A = 0;
 C = ACx + j*ACy;
 G = AGx + j*AGy;
-KM = KLp8 + 7.514;
-% point S = fixed
 
 % define which positions we want as frames in our movie
 frames = 60;    % number of frames in movie
@@ -275,10 +274,10 @@ index_vec = [1:delta:t_size]';
 % This is done by plotting a diagonal from (x_left, y_bottom) to (x_right, y_top), setting the
 % axes equal and saving the axes into "movie_axes", so that "movie_axes" can be used for further
 % plots.
-x_left = -40;
-y_bottom = -20;
-x_right = 5;
-y_top = 20;
+x_left = -40*S;
+y_bottom = -20*S;
+x_right = 5*S;
+y_top = 20*S;
 
 figure(10)
 hold on
@@ -335,7 +334,7 @@ for m=1:length(index_vec)
     
     axis(movie_axes);     % set axes as in movie_axes
     Movie(m) = getframe;  % save frame to a variable Film
-
+end
 
 % save movie
 save fourbar_movie Movie
@@ -399,7 +398,6 @@ save fourbar_movie Movie
 %     plot_kin(t(1:600),ddphi6(1:600),ddphi7(1:600),ddphi8(1:600),test_numeriek_afleiden6,test_numeriek_afleiden7,test_numeriek_afleiden8,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
 %     plot_kin(t(1:600),ddphi9(1:600),ddphi10(1:600),ddphi11(1:600),test_numeriek_afleiden9,test_numeriek_afleiden10,test_numeriek_afleiden11,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
 %     plot_kin(t(1:600),ddPLp8(1:600),ddphi4(1:600),ddphi5(1:600),test_numeriek_afleiden12,test_numeriek_afleiden4,test_numeriek_afleiden5,ddphi2(1:600),ddphi3(1:600),ddphi4(1:600))
-end
 end
 
 

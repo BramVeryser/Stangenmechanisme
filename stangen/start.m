@@ -20,35 +20,35 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % program data
-fig_kin_4bar = 0;        % draw figures of kinematic analysis if 1
+fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
-AC = [-2.818; 3.031];     AG=[0.376;-4.677]; % deze zijn coordinaten tov A, al de rest zijn lengtes
+S=0.0612; %Schaalfactor
 
-AB =2.645; % stang 2
+AC = [-2.818; 3.031]*S;     AG=[0.376;-4.677]*S; % deze zijn coordinaten tov A, al de rest zijn lengtes
 
-BD=3.580; % stang 3
+AB =2.645*S; % stang 2
 
-CK=8.357;                Ep=1.413;        CD=3.215;         CEp=3.464; % stang 4
+BD=3.580*S; % stang 3
 
-EF=8.242; % stang 5
+CK=8.357*S;                Ep=1.413*S;        CD=3.215*S;         CEp=3.464*S; % stang 4
 
-GH=16.500;               Fp=0.578;        FpG=12.116; % stang 6
+EF=8.242*S; % stang 5
 
-HI=6.797;       IJ=1.3195;   % stang 7
+GH=16.500*S;               Fp=0.578*S;        FpG=12.116*S; % stang 6
 
-KM=24.525;               Lp8=2.184;        Ip=4.207;  KLp8=17.011;      IpK=10.394;  % stang 8
+HI=6.797*S;       IJ=1.3195*S;   % stang 7
 
-JN=6.516;  % stang 9
+KM=24.525*S;               Lp8=2.184*S;        Ip=4.207*S;  KLp8=17.011*S;      IpK=10.394*S;  % stang 8
 
-NO=4.9435;      Lp10=0.39032;       Lp10O=3.869;% stang 10
+JN=6.516*S;  % stang 9
 
-OP=6.102; % stang 11
-% schaalfactor S
-S=1;
-% TODO LO, JI, GF,EF definieren, afstanden tussen scharnieren op 1 stang
-STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG]*S;
+NO=4.9435*S;      Lp10=0.39032*S;       Lp10O=3.869*S;% stang 10
+
+OP=6.102*S; % stang 11
+
+STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG];
 phi1 = 0; %grondhoek
 
 %% dynamic parameters, defined in a local frame on each of the bars.
@@ -69,29 +69,31 @@ phi1 = 0; %grondhoek
 % J2 = m2*r2^2/12;
 % J3 = m3*r3^2/12;
 % J4 = m4*r4^2/12;
+r=0.02;
+rho = 2755;   %aluminium kg/m^3
 
-m2 = 1;
-m3 = 1;
-m4 = 1;
-m5 = 1;
-m6 = 1;
-m7 = 1;
-m8 = 1;
-m9 = 1;
-m10 = 1;
-m11 = 1;
+m2 = AB*pi*r^2*rho;
+m3 = BD*pi*r^2*rho;
+m4 = (CK + Ep)*pi*r^2*rho;
+m5 = EF*pi*r^2*rho;
+m6 = (GH + Fp)*pi*r^2*rho;
+m7 = HI*pi*r^2*rho;
+m8 = (KM+Lp8+Ip)*pi*r^2*rho;
+m9 = JN*pi*r^2*rho;
+m10 = (NO + Lp10)*pi*r^2*rho;
+m11 = OP*pi*r^2*rho;
 m = [m2 m3 m4 m5 m6 m7 m8 m9 m10 m11];
 
-J2 = 0.001;
-J3 = 0.001;
-J4 = 0.001;
-J5 = 0.001;
-J6 = 0.001;
-J7 = 0.001;
-J8 = 0.001;
-J9 = 0.001;
-J10 = 0.001;
-J11 = 0.001;
+J2 = m2*r^2/12;
+J3 = m3*r^2/12;
+J4 = m4*r^2/12;
+J5 = m5*r^2/12;
+J6 = m6*r^2/12;
+J7 = m7*r^2/12;
+J8 = m8*r^2/12;
+J9 = m9*r^2/12;
+J10 = m10*r^2/12;
+J11 = m11*r^2/12;
 
 J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11];
 
@@ -117,7 +119,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 2;                    % end time of simulation
+t_end = 30;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -130,7 +132,7 @@ dphi2=-omega*A*sin(omega*t+pi);
 ddphi2=-omega^2*A*cos(omega*t+pi);
 
 % calculation of the kinematics (see kin_4bar.m)
-[phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts);
+[phi,dphi,ddphi] = kinematics_4bar(STANGEN,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts,S);
 %% tot hier voor eerste oefenzitting
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -138,7 +140,7 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % calculation of the dynamics (see dyn_4bar.m)
-[vel,acc,F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar);
+[vel,acc,F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
