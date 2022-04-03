@@ -13,7 +13,7 @@
 
 
 function [vel,acc,F] = ...
-dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S)
+dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
 CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
@@ -82,7 +82,6 @@ m9 = m(8);
 m10 = m(9);
 m11 = m(10);
 
-g = 9.81;
 
 % a lot of definitions to make the matrix A and B a bit clear.
 % skip the definitions for now (move down to "force analysis")
@@ -368,7 +367,8 @@ vel_10y = vel_10(:,2);
 vel_11x = vel_11(:,1);
 vel_11y = vel_11(:,2);
 
-vel = [vel_2x,vel_2y, vel_3x,vel_3y, vel_4x,vel_4y, vel_5x,vel_5y, vel_6x,vel_6y, vel_7x,vel_7y, vel_8x,vel_8y, vel_9x,vel_9y, vel_10x,vel_10y, vel_11x,vel_11y];
+vel = [vel_2, vel_3, vel_4,vel_5, vel_6, vel_7,vel_8, vel_9, vel_10,vel_11];
+%vel = [vel_2x,vel_2y, vel_3x,vel_3y, vel_4x,vel_4y, vel_5x,vel_5y, vel_6x,vel_6y, vel_7x,vel_7y, vel_8x,vel_8y, vel_9x,vel_9y, vel_10x,vel_10y, vel_11x,vel_11y];
 % acceleration vectors
 acc_B =     cross(omega2,cross(omega2,A_B_vec))+cross(alpha2,A_B_vec);%
 acc_E =     cross(omega4,cross(omega4,C_E_vec))+cross(alpha4,C_E_vec);%
@@ -410,7 +410,8 @@ acc_10y = acc_10(:,2);
 acc_11x = acc_11(:,1);
 acc_11y = acc_11(:,2);
 
-acc =  [acc_2x,acc_2y, acc_3x,acc_3y, acc_4x,acc_4y, acc_5x,acc_5y, acc_6x,acc_6y, acc_7x,acc_7y, acc_8x,acc_8y, acc_9x,acc_9y, acc_10x,acc_10y, acc_11x,acc_11y];
+acc = [acc_2,acc_3,acc_4,acc_5,acc_6,acc_7,acc_8,acc_9,acc_10,acc_11];
+%acc =  [acc_2x,acc_2y, acc_3x,acc_3y, acc_4x,acc_4y, acc_5x,acc_5y, acc_6x,acc_6y, acc_7x,acc_7y, acc_8x,acc_8y, acc_9x,acc_9y, acc_10x,acc_10y, acc_11x,acc_11y];
 
 % **********************
 % *** force analysis ***
@@ -568,6 +569,62 @@ if fig_dyn_4bar
     plot(F_D_x,F_D_y),grid
     xlabel('F_D_x [N]')
     ylabel('F_D_y [N]')
+    axis tight
+    
+    figure
+    subplot(221)
+    plot(F_E_x,F_E_y),grid
+    xlabel('F_E_x [N]')
+    ylabel('F_E_y [N]')
+    axis tight
+    subplot(222)
+    plot(F_F_x,F_F_y),grid
+    xlabel('F_F_x [N]')
+    ylabel('F_F_y [N]')
+    axis tight
+    subplot(223)
+    plot(F_G_x,F_G_y),grid
+    xlabel('F_G_x [N]')
+    ylabel('F_G_y [N]')
+    axis tight
+    subplot(224)
+    plot(F_H_x,F_H_y),grid
+    xlabel('F_H_x [N]')
+    ylabel('F_H_y [N]')
+    axis tight
+    
+    figure
+    subplot(221)
+    plot(F_I_x,F_I_y),grid
+    xlabel('F_I_x [N]')
+    ylabel('F_I_y [N]')
+    axis tight
+    subplot(222)
+    plot(F_J_x,F_J_y),grid
+    xlabel('F_J_x [N]')
+    ylabel('F_J_y [N]')
+    axis tight
+    subplot(223)
+    plot(F_K_x,F_K_y),grid
+    xlabel('F_K_x [N]')
+    ylabel('F_K_y [N]')
+    axis tight
+    subplot(224)
+    plot(F_L_x,F_L_y),grid
+    xlabel('F_L_x [N]')
+    ylabel('F_L_y [N]')
+    axis tight
+    
+    figure
+    subplot(221)
+    plot(F_N_x,F_N_y),grid
+    xlabel('F_N_x [N]')
+    ylabel('F_N_y [N]')
+    axis tight
+    subplot(222)
+    plot(F_O_x,F_O_y),grid
+    xlabel('F_O_x [N]')
+    ylabel('F_O_y [N]')
     axis tight
     
     figure

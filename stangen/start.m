@@ -20,7 +20,7 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % program data
-fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
+fig_kin_4bar = 0;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
@@ -69,8 +69,9 @@ phi1 = 0; %grondhoek
 % J2 = m2*r2^2/12;
 % J3 = m3*r3^2/12;
 % J4 = m4*r4^2/12;
-r=0.02;
-rho = 2755;   %aluminium kg/m^3
+r=0.02; %straal [m]
+rho = 2755;   %aluminium [kg/m^3]
+g = 9.81;
 
 m2 = AB*pi*r^2*rho;
 m3 = BD*pi*r^2*rho;
@@ -119,7 +120,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 30;                    % end time of simulation
+t_end = 5;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -140,7 +141,7 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % calculation of the dynamics (see dyn_4bar.m)
-[vel,acc,F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S);
+[vel,acc,F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -153,16 +154,24 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 % Methode van virtuele arbeid
 vel_norm=zeros(size(dphi));acc_norm=zeros(size(phi));
 dE_kin =zeros(size(vel,1),1);dE_kin0=zeros(size(vel,1),1);
+P = zeros(size(vel,1),1);
 for k = 1:10 %itereer over alle stangen: x en y componenten van de vel en acc (2x10)
-    vel_norm(:,k) = sqrt(vel(:,2*k-1).^2+vel(:,2*k).^2);acc_norm(:,k) = sqrt(acc(:,2*k-1).^2+acc(:,2*k).^2);
-    dE_kin0 = dE_kin0 + m(ceil(k/2))*vel(:,k).*acc(:,k)+J(ceil(k/2))*dphi(:,ceil(k/2)).*ddphi(:,ceil(k/2));
-    dE_kin = dE_kin + m(k)*vel_norm(:,k).*acc_norm(:,k)+J(k)*dphi(k).*ddphi(:,k); 
+%     vel_norm(:,k) = sqrt(vel(:,2*k-1).^2+vel(:,2*k).^2);acc_norm(:,k) = sqrt(acc(:,2*k-1).^2+acc(:,2*k).^2);
+%     dE_kin0 = dE_kin0 + m(ceil(k/2))*vel(:,k).*acc(:,k)+J(ceil(k/2))*dphi(:,ceil(k/2)).*ddphi(:,ceil(k/2));
+%     dE_kin = dE_kin + m(k)*vel_norm(:,k).*acc_norm(:,k)+J(k)*dphi(k).*ddphi(:,k);
+    vel_dot_acc = zeros(size(vel(:,1)));
+    for h = 1:size(vel(:,1))
+        dot_h = dot(vel(h,3*k-2:3*k),acc(h,3*k-2:3*k));
+        vel_dot_acc(h) = dot_h;
+    end
+    dE_kin = dE_kin + m(k)*vel_dot_acc+J(k)*dphi(:,k).*ddphi(:,k);
+    P = P + (-ones(size(vel,1),1)*m(k)*g).*vel(:,3*k-1);
 end
-P = dphi2.*F(:,30);
+P = P + dphi2.*F(:,30);
 figure()
 plot(P-dE_kin)
 hold on
-plot(P-dE_kin0)
+%plot(P-dE_kin0)
 title("controle P-dE_{kin} over tijd")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% STEP 3. Movie

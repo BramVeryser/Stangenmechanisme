@@ -259,7 +259,8 @@ phi = [phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11,PLp8];
 dphi = [dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11,dPLp8];
 ddphi = [ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11,ddPLp8];
 % *** create movie ***
-if fig_kin_4bar
+
+if fig_kin_4bar 
 
 A = 0;
 C = ACx + j*ACy;
@@ -334,17 +335,15 @@ for m=1:length(index_vec)
     
     axis(movie_axes);     % set axes as in movie_axes
     Movie(m) = getframe;  % save frame to a variable Film
-end
 
+
+end
 % save movie
 save fourbar_movie Movie
-%close(10)
-
-
+close(10)
 
 %% *** plot figures ***
-
-    
+  
     %plot assembly at a certain timestep 
     index = 1; %select 1st timestep
    
