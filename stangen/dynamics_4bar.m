@@ -12,7 +12,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [vel,acc,F] = ...
+function [vel,acc,F,vel_P,vel_P2,M_12,F12_8x,F12_8y,F12_11x,F12_11y] = ...
 dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g)
 %initialisatie
 AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
@@ -21,7 +21,7 @@ Fp= STANGEN(9);    FpG= STANGEN(10);    HI= STANGEN(11);    IJ= STANGEN(12);
 KM= STANGEN(13);    Lp8= STANGEN(14);   Ip= STANGEN(15);   KLp8= STANGEN(16);
 IpK= STANGEN(17);    JN= STANGEN(18);  NO=STANGEN(19);     Lp10=STANGEN(20);
 Lp10O=STANGEN(21);    OP=STANGEN(22);    ACx=STANGEN(23);    ACy=STANGEN(24);
-AGx=STANGEN(25);    AGy=STANGEN(26);
+AGx=STANGEN(25);    AGy=STANGEN(26);    stang12 = STANGEN(27);
 Lp10N = NO - Lp10O;
 IpLp8 = KLp8 - IpK;
 FpH = GH - FpG;
@@ -81,7 +81,9 @@ m8 = m(7);
 m9 = m(8);
 m10 = m(9);
 m11 = m(10);
+m12 = m(11);
 
+F_12 = +m12*g;
 
 % a lot of definitions to make the matrix A and B a bit clear.
 % skip the definitions for now (move down to "force analysis")
@@ -116,6 +118,7 @@ cog8_K= -1/3*(KM*exp(j*phi8)+IpK*exp(j*phi8)+Ip*exp(j*(phi8-pi/2)));  cog8_K_x= 
 cog8_L= cog8_K + KLp8*exp(j*phi8)+Lp8*exp(j*(phi8-pi/2));              cog8_L_x= real(cog8_L);cog8_L_y= imag(cog8_L);
 cog8_I= cog8_K + IpK*exp(j*phi8)+Ip*exp(j*(phi8-pi/2));               cog8_I_x= real(cog8_I);cog8_I_y= imag(cog8_I);
 cog8_P= cog8_K + KLp8*exp(j*phi8)+ PLp8.*exp(j*phi8);                 cog8_P_x= real(cog8_P);cog8_P_y= imag(cog8_P);
+cog8_M = cog8_K + KM*exp(j*phi8);                                      cog8_M_x= real(cog8_M);cog8_M_y= imag(cog8_M);      
 
 cog9_J= -JN/2*exp(j*phi9);                                          cog9_J_x= real(cog9_J);cog9_J_y= imag(cog9_J);
 cog9_N= JN/2*exp(j*phi9);                                          cog9_N_x= real(cog9_N);cog9_N_y= imag(cog9_N);
@@ -127,7 +130,11 @@ cog10_O= cog10_N + NO*exp(j*phi10);                                 cog10_O_x= r
 cog11_O= -OP/2*exp(j*phi11);                                        cog11_O_x= real(cog11_O);cog11_O_y= imag(cog11_O);
 cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= real(cog11_P);cog11_P_y= imag(cog11_P);
 
-
+M_12 = F_12*cog8_P_x;
+F12_8x = F_12*sin(3*pi/2-phi8).*cos(phi8-pi/2);
+F12_8y = F_12*sin(3*pi/2-phi8).*sin(phi8-pi/2);
+F12_11x = F_12*cos(3*pi/2-phi8).*cos(phi8-pi);
+F12_11y = F_12*cos(3*pi/2-phi8).*sin(phi8-pi);
 %% Controle massacentra
 % % index = 1;
 % % A = 0;
@@ -325,7 +332,11 @@ C_K_vec     = C_cog4_vec + [cog4_K_x cog4_K_y zeros(size(phi2))];
 H_J_vec     = H_cog7_vec + [cog7_J_x cog7_J_y zeros(size(phi2))];
 J_N_vec     = J_cog9_vec + [cog9_N_x cog9_N_y zeros(size(phi2))];
 N_O_vec     = N_cog10_vec+ [cog10_O_x cog10_O_y zeros(size(phi2))];
+K_P_vec     = [(KLp8+PLp8).*cos(phi8)    (KLp8+PLp8).*sin(phi8) zeros(size(phi2))];
+K_M_vec     = [(KM)*cos(phi8)    (KM)*sin(phi8) zeros(size(phi2))];
+O_P_vec     = [OP.*cos(phi11)   OP.*sin(phi11)  zeros(size(phi2))];
 
+vel_PLp8 = [dPLp8.*cos(phi8),dPLp8.*sin(phi8),zeros(size(phi2))];
 % velocity vectors
 vel_B = cross(omega2,A_B_vec);
 vel_E = cross(omega4,C_E_vec);
@@ -334,6 +345,9 @@ vel_K = cross(omega4,C_K_vec);
 vel_J = vel_H + cross(omega7,H_J_vec);
 vel_N = vel_J + cross(omega9,J_N_vec);
 vel_O = vel_N + cross(omega10,N_O_vec);
+vel_P = vel_K + cross(omega8,K_P_vec);
+vel_P2 = vel_O + cross(omega11,O_P_vec);
+vel_M = vel_K + cross(omega8,K_M_vec);
 
 vel_2 =     cross(omega2,A_cog2_vec);
 vel_3 =     vel_B + cross(omega3,B_cog3_vec);
@@ -485,24 +499,24 @@ for k=1:t_size
         m6*(acc_6y(k)+g);
         m7*acc_7x(k);
         m7*(acc_7y(k)+g);
-        m8*acc_8x(k);
-        m8*(acc_8y(k)+g);
+        m8*acc_8x(k) + F12_8x(k);
+        m8*(acc_8y(k)+g)+ F12_8y(k);
         m9*acc_9x(k);
         m9*(acc_9y(k)+g);
         m10*acc_10x(k);
         m10*(acc_10y(k)+g);
-        m11*acc_11x(k);
-        m11*(acc_11y(k)+g);
+        m11*acc_11x(k) + F12_11x(k);
+        m11*(acc_11y(k)+g) + F12_11y(k);
         J2*ddphi2(k);
         J3*ddphi3(k);
-        J4*ddphi4(k)
+        J4*ddphi4(k);
         J5*ddphi5(k);
         J6*ddphi6(k);
-        J7*ddphi7(k)
-        J8*ddphi8(k);
+        J7*ddphi7(k);
+        J8*ddphi8(k) - (stang12/2)*cos(phi8(k))*F_12 - F12_8x(k)*cog8_P_y(k)+F12_8y(k)*cog8_P_x(k);
         J9*ddphi9(k);
-        J10*ddphi10(k)
-        J11*ddphi11(k)];
+        J10*ddphi10(k);
+        J11*ddphi11(k) - F12_11x(k)*cog11_P_y(k)+  F12_11y(k)*cog11_P_x(k)];
     
     x = A\B;
     
@@ -625,7 +639,13 @@ if fig_dyn_4bar
     plot(F_O_x,F_O_y),grid
     xlabel('F_O_x [N]')
     ylabel('F_O_y [N]')
+    axis tight    
+    subplot(223)
+    plot(F_P.*cos(phi8-pi/2),F_P.*sin(phi8-pi/2)),grid
+    xlabel('F_P_x [N]')
+    ylabel('F_P_y [N]')
     axis tight
+    
     
     figure
     plot(t,M_A)

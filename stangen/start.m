@@ -20,7 +20,7 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % program data
-fig_kin_4bar = 0;        % draw figures of kinematic analysis if 1
+fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
@@ -48,7 +48,9 @@ NO=4.9435*S;      Lp10=0.39032*S;       Lp10O=3.869*S;% stang 10
 
 OP=6.102*S; % stang 11
 
-STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG];
+stang12 = 11*S; breedte = 25*S;
+
+STANGEN = [AB;BD;CK;Ep;CD;CEp;EF;GH;Fp;FpG;HI;IJ;KM;Lp8;Ip;KLp8;IpK;JN;NO;Lp10;Lp10O;OP;AC;AG;stang12];
 phi1 = 0; %grondhoek
 
 %% dynamic parameters, defined in a local frame on each of the bars.
@@ -79,11 +81,13 @@ m4 = (CK + Ep)*pi*r^2*rho;
 m5 = EF*pi*r^2*rho;
 m6 = (GH + Fp)*pi*r^2*rho;
 m7 = HI*pi*r^2*rho;
-m8 = (KM+Lp8+Ip)*pi*r^2*rho;
+%m8 = (KM+Lp8+Ip)*pi*r^2*rho;
+m8 = (KM*0.01*breedte)*rho;
 m9 = JN*pi*r^2*rho;
 m10 = (NO + Lp10)*pi*r^2*rho;
 m11 = OP*pi*r^2*rho;
-m = [m2 m3 m4 m5 m6 m7 m8 m9 m10 m11];
+m12 = stang12*breedte*0.0075*rho;
+m = [m2 m3 m4 m5 m6 m7 m8 m9 m10 m11 m12];
 
 J2 = m2*r^2/12;
 J3 = m3*r^2/12;
@@ -120,12 +124,12 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 5;                    % end time of simulation
+t_end = 30;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
 % initialization of driver
-omega = 0.2; %zelf berekenen door phi2 te meten
+omega = pi/15; %zelf berekenen door phi2 te meten
 A = 1.019;
 B = 4.043;
 phi2=A*cos(omega*t+pi)+B; %tussen welke 2 hoeken ligt onze phi2?
@@ -141,7 +145,7 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % calculation of the dynamics (see dyn_4bar.m)
-[vel,acc,F] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g);
+[vel,acc,F,vel_P,vel_P2,M_12,F12_8x,F12_8y,F12_11x,F12_11y] = dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,6 +171,13 @@ for k = 1:10 %itereer over alle stangen: x en y componenten van de vel en acc (2
     dE_kin = dE_kin + m(k)*vel_dot_acc+J(k)*dphi(:,k).*ddphi(:,k);
     P = P + (-ones(size(vel,1),1)*m(k)*g).*vel(:,3*k-1);
 end
+P = P + vel_P(:,1).*(-F12_8x);
+P = P + vel_P(:,2).*(-F12_8y);
+P = P + vel_P2(:,1).*(-F12_11x);
+P = P + vel_P2(:,2).*(-F12_11y);
+%P = P + (-ones(size(vel,1),1)*m12*g).*vel(:,3*7-1);
+%P = P + dphi(:,6).*(-M_12);
+P = P + dphi(:,6).*(m12*g*(stang12/2)*cos(phi(:,6)));
 P = P + dphi2.*F(:,30);
 figure()
 plot(P-dE_kin)
@@ -176,8 +187,8 @@ title("controle P-dE_{kin} over tijd")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% STEP 3. Movie
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-figure
-load fourbar_movie Movie
-movie(Movie)
-
+if fig_kin_4bar
+    figure
+    load fourbar_movie Movie
+    movie(Movie)
+end
