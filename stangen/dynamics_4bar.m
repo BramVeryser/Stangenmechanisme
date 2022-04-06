@@ -26,6 +26,8 @@ Lp10N = NO - Lp10O;
 IpLp8 = KLp8 - IpK;
 FpH = GH - FpG;
 EpK = CK - CEp;
+
+A_excel = xlsread('matrix.xlsx','B2:AC21');
 % variabelen phi dphi en ddphi moeten nog gedefinieerd worden in kin
 phi3 = phi(:,1);
 phi4 = phi(:,2);
@@ -536,7 +538,7 @@ for k=1:t_size
 %         J10*ddphi10(k);
 %         J11*ddphi11(k) - F12_11x(k)*cog11_P_y(k)+  F12_11y(k)*cog11_P_x(k)];
 %   
-  A_excel = xlsread('matrix.xlsx','B2:AC21');
+  
   A_rechts = [zeros(12,1);cos(phi8(k)-pi/2);sin(phi8(k)-pi/2);zeros(6,1)];
   A_rechts2 = zeros(20,1);
   A_rechts3 = [zeros(18,1);1;0];
