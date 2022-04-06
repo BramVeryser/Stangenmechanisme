@@ -20,7 +20,7 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % program data
-fig_kin_4bar = 1;        % draw figures of kinematic analysis if 1
+fig_kin_4bar = 0;        % draw figures of kinematic analysis if 1
 fig_dyn_4bar = 1;        % draw figures of dynamic analysis if 1
 
 % kinematic parameters (link lengths)
@@ -89,16 +89,16 @@ m11 = OP*pi*r^2*rho;
 m12 = stang12*breedte*0.0075*rho;
 m = [m2 m3 m4 m5 m6 m7 m8 m9 m10 m11 m12];
 
-J2 = m2*r^2/12;
-J3 = m3*r^2/12;
-J4 = m4*r^2/12;
-J5 = m5*r^2/12;
-J6 = m6*r^2/12;
-J7 = m7*r^2/12;
-J8 = m8*r^2/12;
-J9 = m9*r^2/12;
-J10 = m10*r^2/12;
-J11 = m11*r^2/12;
+J2 = m2*AB^2/12;
+J3 = m3*BD^2/12;
+J4 = m4*CK^2/12;
+J5 = m5*EF^2/12;
+J6 = m6*GH^2/12;
+J7 = m7*HI^2/12;
+J8 = m8*KM^2/12;
+J9 = m9*JN^2/12;
+J10 = m10*NO^2/12;
+J11 = m11*OP^2/12;
 
 J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11];
 
@@ -124,7 +124,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 30;                    % end time of simulation
+t_end = 10;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -159,6 +159,8 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 vel_norm=zeros(size(dphi));acc_norm=zeros(size(phi));
 dE_kin =zeros(size(vel,1),1);dE_kin0=zeros(size(vel,1),1);
 P = zeros(size(vel,1),1);
+dphi = [dphi2,dphi];
+ddphi = [ddphi2,ddphi];
 for k = 1:10 %itereer over alle stangen: x en y componenten van de vel en acc (2x10)
 %     vel_norm(:,k) = sqrt(vel(:,2*k-1).^2+vel(:,2*k).^2);acc_norm(:,k) = sqrt(acc(:,2*k-1).^2+acc(:,2*k).^2);
 %     dE_kin0 = dE_kin0 + m(ceil(k/2))*vel(:,k).*acc(:,k)+J(ceil(k/2))*dphi(:,ceil(k/2)).*ddphi(:,ceil(k/2));
@@ -177,7 +179,7 @@ P = P + vel_P2(:,1).*(-F12_11x);
 P = P + vel_P2(:,2).*(-F12_11y);
 %P = P + (-ones(size(vel,1),1)*m12*g).*vel(:,3*7-1);
 %P = P + dphi(:,6).*(-M_12);
-P = P + dphi(:,6).*(m12*g*(stang12/2)*cos(phi(:,6)));
+P = P + dphi(:,7).*(m12*g*(stang12/2)*cos(phi(:,6)));
 P = P + dphi2.*F(:,30);
 figure()
 plot(P-dE_kin)
