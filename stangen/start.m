@@ -99,8 +99,9 @@ J8 = m8*KM^2/12;
 J9 = m9*JN^2/12;
 J10 = m10*NO^2/12;
 J11 = m11*OP^2/12;
+J12 = m12*stang12^2/12;
 
-J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11];
+J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11 J12];
 
 
 
@@ -112,7 +113,7 @@ J = [J2 J3 J4 J5 J6 J7 J8 J9 J10 J11];
 
 % position analysis
 phi3_init = 2.67884;     % initial condition for first step of position analysis with fsolve (phi3 and phi4)
-phi4_init = 3.49897;    % VERY IMPORTANT because it determines which branch of the mechanism you're in
+phi4_init = 3.49897;     % VERY IMPORTANT because it determines which branch of the mechanism you're in
 phi5_init = 4.04233;     %  moeten we echt een starthoek hebben voor elke
 phi6_init = 3.07687;     % stang?
 phi7_init = 2.58474;
@@ -124,7 +125,7 @@ PLp8=7.514*S;
 phi_init=[phi3_init,phi4_init,phi5_init,phi6_init,phi7_init,phi8_init,phi9_init,phi10_init,phi11_init,PLp8]';
 
 t_begin = 0;                   % start time of simulation
-t_end = 10;                    % end time of simulation
+t_end = 30;                    % end time of simulation
 Ts = 0.05;                     % time step of simulation
 t = [t_begin:Ts:t_end]';       % time vector
 
@@ -159,9 +160,9 @@ ddphi2=-omega^2*A*cos(omega*t+pi);
 vel_norm=zeros(size(dphi));acc_norm=zeros(size(phi));
 dE_kin =zeros(size(vel,1),1);dE_kin0=zeros(size(vel,1),1);
 P = zeros(size(vel,1),1);
-dphi = [dphi2,dphi];
-ddphi = [ddphi2,ddphi];
-for k = 1:10 %itereer over alle stangen: x en y componenten van de vel en acc (2x10)
+dphi = [dphi2,dphi(:,1:9),dphi(:,6)];
+ddphi = [ddphi2,ddphi(:,1:9),ddphi(:,6)];
+for k = 1:11 %itereer over alle stangen: x en y componenten van de vel en acc (2x10)
 %     vel_norm(:,k) = sqrt(vel(:,2*k-1).^2+vel(:,2*k).^2);acc_norm(:,k) = sqrt(acc(:,2*k-1).^2+acc(:,2*k).^2);
 %     dE_kin0 = dE_kin0 + m(ceil(k/2))*vel(:,k).*acc(:,k)+J(ceil(k/2))*dphi(:,ceil(k/2)).*ddphi(:,ceil(k/2));
 %     dE_kin = dE_kin + m(k)*vel_norm(:,k).*acc_norm(:,k)+J(k)*dphi(k).*ddphi(:,k);
@@ -173,13 +174,13 @@ for k = 1:10 %itereer over alle stangen: x en y componenten van de vel en acc (2
     dE_kin = dE_kin + m(k)*vel_dot_acc+J(k)*dphi(:,k).*ddphi(:,k);
     P = P + (-ones(size(vel,1),1)*m(k)*g).*vel(:,3*k-1);
 end
-P = P + vel_P(:,1).*(-F12_8x);
-P = P + vel_P(:,2).*(-F12_8y);
-P = P + vel_P2(:,1).*(-F12_11x);
-P = P + vel_P2(:,2).*(-F12_11y);
+% P = P + vel_P(:,1).*(-F12_8x);
+% P = P + vel_P(:,2).*(-F12_8y);
+% P = P + vel_P2(:,1).*(-F12_11x);
+% P = P + vel_P2(:,2).*(-F12_11y);
 %P = P + (-ones(size(vel,1),1)*m12*g).*vel(:,3*7-1);
 %P = P + dphi(:,6).*(-M_12);
-P = P + dphi(:,7).*(m12*g*(stang12/2)*cos(phi(:,6)));
+%P = P + dphi(:,7).*(m12*g*(stang12/2)*cos(phi(:,6)));
 P = P + dphi2.*F(:,30);
 figure()
 plot(P-dE_kin)
