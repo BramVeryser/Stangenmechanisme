@@ -12,55 +12,59 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [vel,acc,F,vel_P,vel_P2,M_12,F12_8x,F12_8y,F12_11x,F12_11y] = ...
-dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,STANGEN,J,m,t,fig_dyn_4bar,S,g)
-%initialisatie
-AB= STANGEN(1);     BD= STANGEN(2);     CK= STANGEN(3);     Ep= STANGEN(4);
-CD= STANGEN(5);     CEp= STANGEN(6);     EF= STANGEN(7);     GH= STANGEN(8);
-Fp= STANGEN(9);    FpG= STANGEN(10);    HI= STANGEN(11);    IJ= STANGEN(12);
-KM= STANGEN(13);    Lp8= STANGEN(14);   Ip= STANGEN(15);   KLp8= STANGEN(16);
-IpK= STANGEN(17);    JN= STANGEN(18);  NO=STANGEN(19);     Lp10=STANGEN(20);
-Lp10O=STANGEN(21);    OP=STANGEN(22);    ACx=STANGEN(23);    ACy=STANGEN(24);
-AGx=STANGEN(25);    AGy=STANGEN(26);    stang12 = STANGEN(27);
+function [vel,acc,F] = ...
+dynamics_4bar(phi,dphi,ddphi,phi2,dphi2,ddphi2,LINKS,J,m,t,fig_dyn_4bar,S,g)
+
+
+%initialisation
+AB= LINKS(1);     BD= LINKS(2);     CK= LINKS(3);     Ep= LINKS(4);
+CD= LINKS(5);     CEp= LINKS(6);     EF= LINKS(7);     GH= LINKS(8);
+Fp= LINKS(9);    FpG= LINKS(10);    HI= LINKS(11);    IJ= LINKS(12);
+KM= LINKS(13);    Lp8= LINKS(14);   Ip= LINKS(15);   KLp8= LINKS(16);
+IpK= LINKS(17);    JN= LINKS(18);  NO=LINKS(19);     Lp10=LINKS(20);
+Lp10O=LINKS(21);    OP=LINKS(22);    ACx=LINKS(23);    ACy=LINKS(24);
+AGx=LINKS(25);    AGy=LINKS(26);    stang12 = LINKS(27);
+
+%extra lengts that where perviously undefined
 Lp10N = NO - Lp10O;
 IpLp8 = KLp8 - IpK;
 FpH = GH - FpG;
 EpK = CK - CEp;
 
 A_excel = xlsread('matrix.xlsx','B2:AC21');
-% variabelen phi dphi en ddphi moeten nog gedefinieerd worden in kin
-phi3 = phi(:,1);
-phi4 = phi(:,2);
-phi5 = phi(:,3);
-phi6 = phi(:,4);
-phi7 = phi(:,5);
-phi8 = phi(:,6);
-phi9 = phi(:,7);
-phi10 = phi(:,8);
-phi11 = phi(:,9);
-PLp8= phi(:,10);
-%
-dphi3 = dphi(:,1);
-dphi4 = dphi(:,2);
-dphi5 = dphi(:,3);
-dphi6 = dphi(:,4);
-dphi7 = dphi(:,5);
-dphi8 = dphi(:,6);
-dphi9 = dphi(:,7);
-dphi10 = dphi(:,8);
-dphi11 = dphi(:,9);
-dPLp8= dphi(:,10);
-%
-ddphi3 = ddphi(:,1);
-ddphi4 = ddphi(:,2);
-ddphi5 = ddphi(:,3);
-ddphi6 = ddphi(:,4);
-ddphi7 = ddphi(:,5);
-ddphi8 = ddphi(:,6);
-ddphi9 = ddphi(:,7);
-ddphi10= ddphi(:,8);
-ddphi11= ddphi(:,9);
-ddPLp8 = ddphi(:,10);
+
+phi3 = phi(:,2);
+phi4 = phi(:,3);
+phi5 = phi(:,4);
+phi6 = phi(:,5);
+phi7 = phi(:,6);
+phi8 = phi(:,7);
+phi9 = phi(:,8);
+phi10 = phi(:,9);
+phi11 = phi(:,10);
+PLp8= phi(:,12);
+
+dphi3 = dphi(:,2);
+dphi4 = dphi(:,3);
+dphi5 = dphi(:,4);
+dphi6 = dphi(:,5);
+dphi7 = dphi(:,6);
+dphi8 = dphi(:,7);
+dphi9 = dphi(:,8);
+dphi10 = dphi(:,9);
+dphi11 = dphi(:,10);
+dPLp8= dphi(:,12);
+
+ddphi3 = ddphi(:,2);
+ddphi4 = ddphi(:,3);
+ddphi5 = ddphi(:,4);
+ddphi6 = ddphi(:,5);
+ddphi7 = ddphi(:,6);
+ddphi8 = ddphi(:,7);
+ddphi9 = ddphi(:,8);
+ddphi10= ddphi(:,9);
+ddphi11= ddphi(:,10);
+ddPLp8 = ddphi(:,12);
 
 J2 = J(1);
 J3 = J(2);
@@ -86,21 +90,17 @@ m10 = m(9);
 m11 = m(10);
 m12 = m(11);
 
-F_12 = +m12*g;
-
-% a lot of definitions to make the matrix A and B a bit clear.
-% skip the definitions for now (move down to "force analysis")
-% and check them when you need them.
 
 
 % cogi_P_x, cogn_P_y = vector from the centre of gravity of bar i to point P
-% hefboomsarm van cog van stang i naar scharnier A...
+
 cog2_A= -AB/2*exp(j*phi2);                                          cog2_A_x= real(cog2_A);cog2_A_y= imag(cog2_A);
 cog2_B=  AB/2*exp(j*phi2);                                          cog2_B_x= real(cog2_B);cog2_B_y= imag(cog2_B);
 
 cog3_B= -BD/2*exp(j*phi3);                                          cog3_B_x= real(cog3_B);cog3_B_y= imag(cog3_B);
 cog3_D=  BD/2*exp(j*phi3);                                          cog3_D_x= real(cog3_D);cog3_D_y= imag(cog3_D);
-% Zie wikipedia
+
+% Bar 4 is assumed to be a triangle (seed report)
 cog4_C= -1/3*(CK*exp(j*phi4)+CEp*exp(j*phi4)+Ep*exp(j*(phi4-pi/2)));  cog4_C_x= real(cog4_C);cog4_C_y= imag(cog4_C);
 cog4_D=  cog4_C + CD*exp(j*phi4);                                   cog4_D_x= real(cog4_D);cog4_D_y= imag(cog4_D);
 cog4_E=  cog4_C + CEp*exp(j*phi4)+Ep*exp(j*(phi4-pi/2));              cog4_E_x= real(cog4_E);cog4_E_y= imag(cog4_E);
@@ -108,15 +108,17 @@ cog4_K=  cog4_C + CK*exp(j*phi4);                                   cog4_K_x= re
 
 cog5_E= -EF/2*exp(j*phi5);                                          cog5_E_x= real(cog5_E);cog5_E_y= imag(cog5_E);
 cog5_F=  EF/2*exp(j*phi5);                                          cog5_F_x= real(cog5_F);cog5_F_y= imag(cog5_F);
-%3hoek
+
+% Bar 6 is assumed to be a triangle (seed report)
 cog6_G= -1/3*(GH*exp(j*phi6)+FpG*exp(j*phi6)+Fp*exp(j*(phi6-pi/2)));  cog6_G_x= real(cog6_G);cog6_G_y= imag(cog6_G);
 cog6_H=  cog6_G + GH*exp(j*phi6);                                   cog6_H_x= real(cog6_H);cog6_H_y= imag(cog6_H);
 cog6_F=  cog6_G + FpG*exp(j*phi6)+Fp*exp(j*(phi6-pi/2));              cog6_F_x= real(cog6_F);cog6_F_y= imag(cog6_F);
-% gn 3hoek
+
 cog7_H= -HI/2*exp(j*phi7);                                          cog7_H_x= real(cog7_H);cog7_H_y= imag(cog7_H);
 cog7_I=  HI/2*exp(j*phi7);                                          cog7_I_x= real(cog7_I);cog7_I_y= imag(cog7_I);
 cog7_J=  cog7_I - IJ*exp(j*phi7) ;                                  cog7_J_x= real(cog7_J);cog7_J_y= imag(cog7_J);
-%3hoek 
+
+% Bar 8 is assumed to be a triangle (seed report)
 cog8_K= -1/3*(KM*exp(j*phi8)+IpK*exp(j*phi8)+Ip*exp(j*(phi8-pi/2)));  cog8_K_x= real(cog8_K);cog8_K_y= imag(cog8_K);
 cog8_L= cog8_K + KLp8*exp(j*phi8)+Lp8*exp(j*(phi8-pi/2));              cog8_L_x= real(cog8_L);cog8_L_y= imag(cog8_L);
 cog8_I= cog8_K + IpK*exp(j*phi8)+Ip*exp(j*(phi8-pi/2));               cog8_I_x= real(cog8_I);cog8_I_y= imag(cog8_I);
@@ -125,7 +127,8 @@ cog8_M = cog8_K + KM*exp(j*phi8);                                      cog8_M_x=
 
 cog9_J= -JN/2*exp(j*phi9);                                          cog9_J_x= real(cog9_J);cog9_J_y= imag(cog9_J);
 cog9_N= JN/2*exp(j*phi9);                                          cog9_N_x= real(cog9_N);cog9_N_y= imag(cog9_N);
-%driehoek 
+
+% Bar 10 is assumed to be a triangle (seed report)
 cog10_N= -1/3*(NO*exp(j*phi10)+Lp10N*exp(j*phi10)+Lp10*exp(j*(phi10-pi/2)));  cog10_N_x= real(cog10_N);cog10_N_y= imag(cog10_N);
 cog10_L= cog10_N + Lp10N*exp(j*phi10)+Lp10*exp(j*(phi10-pi/2));       cog10_L_x= real(cog10_L);cog10_L_y= imag(cog10_L);
 cog10_O= cog10_N + NO*exp(j*phi10);                                 cog10_O_x= real(cog10_O);cog10_O_y= imag(cog10_O);
@@ -136,12 +139,8 @@ cog11_P=  OP/2*exp(j*phi11);                                        cog11_P_x= r
 cog12_P= -stang12/2*exp(j*phi8);                                    cog12_P_x= real(cog12_P);cog12_P_y= imag(cog12_P);
 
 
-M_12 = F_12*cog8_P_x;
-F12_8x = F_12*sin(3*pi/2-phi8).*cos(phi8-pi/2);
-F12_8y = F_12*sin(3*pi/2-phi8).*sin(phi8-pi/2);
-F12_11x = F_12*cos(3*pi/2-phi8).*cos(phi8-pi);
-F12_11y = F_12*cos(3*pi/2-phi8).*sin(phi8-pi);
-%% Controle massacentra
+
+%% Check center of gravity
 % % index = 1;
 % % A = 0;
 % % C = ACx + j*ACy;
@@ -346,7 +345,6 @@ K_M_vec     = [(KM)*cos(phi8)    (KM)*sin(phi8) zeros(size(phi2))];
 O_P_vec     = [OP.*cos(phi11)   OP.*sin(phi11)  zeros(size(phi2))];
 O_P_vec     = [OP.*cos(phi11)   OP.*sin(phi11)  zeros(size(phi2))];
 
-vel_PLp8 = [dPLp8.*cos(phi8),dPLp8.*sin(phi8),zeros(size(phi2))];
 % velocity vectors
 vel_B = cross(omega2,A_B_vec);
 vel_E = cross(omega4,C_E_vec);
@@ -371,31 +369,8 @@ vel_10 =    vel_N + cross(omega10,N_cog10_vec);
 vel_11 =    vel_O + cross(omega11,O_cog11_vec);
 vel_12 =    vel_P2 + cross(omega12,P_cog12_vec);
 
-vel_2x = vel_2(:,1);
-vel_2y = vel_2(:,2);
-vel_3x = vel_3(:,1);
-vel_3y = vel_3(:,2);
-vel_4x = vel_4(:,1);
-vel_4y = vel_4(:,2);
-vel_5x = vel_5(:,1);
-vel_5y = vel_5(:,2);
-vel_6x = vel_6(:,1);
-vel_6y = vel_6(:,2);
-vel_7x = vel_7(:,1);
-vel_7y = vel_7(:,2);
-vel_8x = vel_8(:,1);
-vel_8y = vel_8(:,2);
-vel_9x = vel_9(:,1);
-vel_9y = vel_9(:,2);
-vel_10x = vel_10(:,1);
-vel_10y = vel_10(:,2);
-vel_11x = vel_11(:,1);
-vel_11y = vel_11(:,2);
-vel_12x = vel_12(:,1);
-vel_12y = vel_12(:,2);
-
 vel = [vel_2, vel_3, vel_4,vel_5, vel_6, vel_7,vel_8, vel_9, vel_10,vel_11,vel_12];
-%vel = [vel_2x,vel_2y, vel_3x,vel_3y, vel_4x,vel_4y, vel_5x,vel_5y, vel_6x,vel_6y, vel_7x,vel_7y, vel_8x,vel_8y, vel_9x,vel_9y, vel_10x,vel_10y, vel_11x,vel_11y];
+
 % acceleration vectors
 acc_B =     cross(omega2,cross(omega2,A_B_vec))+cross(alpha2,A_B_vec);%
 acc_E =     cross(omega4,cross(omega4,C_E_vec))+cross(alpha4,C_E_vec);%
@@ -442,7 +417,6 @@ acc_12x = acc_12(:,1);
 acc_12y = acc_12(:,2);
 
 acc = [acc_2,acc_3,acc_4,acc_5,acc_6,acc_7,acc_8,acc_9,acc_10,acc_11,acc_12];
-%acc =  [acc_2x,acc_2y, acc_3x,acc_3y, acc_4x,acc_4y, acc_5x,acc_5y, acc_6x,acc_6y, acc_7x,acc_7y, acc_8x,acc_8y, acc_9x,acc_9y, acc_10x,acc_10y, acc_11x,acc_11y];
 
 % **********************
 % *** force analysis ***
@@ -486,59 +460,7 @@ M_P = zeros(size(phi2));
 %% calculate dynamics for each time step
 t_size = size(t,1);    % number of simulation steps
 for k=1:t_size
-   
-  
-%   A_excel = xlsread('matrix.xlsx','B2:AC21');
-%   A_rechts = [zeros(12,1);cos(phi8(k)-pi/2);sin(phi8(k)-pi/2);zeros(4,1);-cos(phi8(k)-pi/2);-sin(phi8(k)-pi/2)];
-%   A_rechts2 = [A_rechts, zeros(20,1)];
-%   A_boven = [A_excel,A_rechts2];
-%   
-%   M2 = [-cog2_A_y(k)    cog2_A_x(k)     -cog2_B_y(k)    cog2_B_x(k)     zeros(1,25)     1];
-%   M3 = [0 0 cog3_B_y(k)     -cog3_B_x(k)    0   0   cog3_D_y(k)     -cog3_D_x(k)    zeros(1,22)];
-%   M4 = [zeros(1,4)  -cog4_C_y(k)       cog4_C_x(k)    -cog4_D_y(k)       cog4_D_x(k)    -cog4_E_y(k)       cog4_E_x(k)    zeros(1,10)     -cog4_K_y(k)       cog4_K_x(k)    zeros(1,8)];
-%   M5 = [zeros(1,8)  cog5_E_y(k)       -cog5_E_x(k)    cog5_F_y(k)       -cog5_F_x(k)    zeros(1,18)];
-%   M6 = [zeros(1,10) -cog6_F_y(k)       cog6_F_x(k)    -cog6_G_y(k)       cog6_G_x(k)    -cog6_H_y(k)       cog6_H_x(k) zeros(1,14)];
-%   M7 = [zeros(1,14) cog7_H_y(k)       -cog7_H_x(k)      cog7_I_y(k)       -cog7_I_x(k)  cog7_J_y(k)       -cog7_J_x(k)  zeros(1,10)];
-%   M8 = [zeros(1,16)     -cog8_I_y(k)       cog8_I_x(k)  0   0   cog8_K_y(k)    -cog8_K_x(k)     -cog8_L_y(k)       cog8_L_x(k) zeros(1,4)   -cog8_P_y(k)*cos(phi8(k)-pi/2)+cog8_P_x(k)*sin(phi8(k)-pi/2)    0];
-%   M9 = [zeros(1,18)     -cog9_J_y(k)       cog9_J_x(k)  zeros(1,4)  -cog9_N_y(k)       cog9_N_x(k)  zeros(1,4)];
-%   M10 = [zeros(1,22)    cog10_L_y(k)       -cog10_L_x(k)    cog10_N_y(k)       -cog10_N_x(k)    cog10_O_y(k)       -cog10_O_x(k)    0   0];
-%   M11 = [zeros(1,26)    -cog11_O_y(k)   cog11_O_x(k)    cog11_P_y(k)*cos(phi8(k)-pi/2)-cog11_P_x(k)*sin(phi8(k)-pi/2) 0];
-%   A_onder = [M2;M3;M4;M5;M6;M7;M8;M9;M10;M11];
-%   
-%   A = [A_boven;A_onder];
-  
-%   B = [ m2*acc_2x(k);
-%         m2*(acc_2y(k)+g);
-%         m3*acc_3x(k);
-%         m3*(acc_3y(k)+g);
-%         m4*acc_4x(k);
-%         m4*(acc_4y(k)+g);
-%         m5*acc_5x(k);
-%         m5*(acc_5y(k)+g);
-%         m6*acc_6x(k);
-%         m6*(acc_6y(k)+g);
-%         m7*acc_7x(k);
-%         m7*(acc_7y(k)+g);
-%         m8*acc_8x(k) + F12_8x(k);
-%         m8*(acc_8y(k)+g)+ F12_8y(k);
-%         m9*acc_9x(k);
-%         m9*(acc_9y(k)+g);
-%         m10*acc_10x(k);
-%         m10*(acc_10y(k)+g);
-%         m11*acc_11x(k) + F12_11x(k);
-%         m11*(acc_11y(k)+g) + F12_11y(k);
-%         J2*ddphi2(k);
-%         J3*ddphi3(k);
-%         J4*ddphi4(k);
-%         J5*ddphi5(k);
-%         J6*ddphi6(k);
-%         J7*ddphi7(k);
-%         J8*ddphi8(k) - (stang12/2)*cos(phi8(k))*F_12 - F12_8x(k)*cog8_P_y(k)+F12_8y(k)*cog8_P_x(k);
-%         J9*ddphi9(k);
-%         J10*ddphi10(k);
-%         J11*ddphi11(k) - F12_11x(k)*cog11_P_y(k)+  F12_11y(k)*cog11_P_x(k)];
-%   
-  
+    
   A_rechts = [zeros(12,1);cos(phi8(k)-pi/2);sin(phi8(k)-pi/2);zeros(6,1)];
   A_rechts2 = zeros(20,1);
   A_rechts3 = [zeros(18,1);1;0];
