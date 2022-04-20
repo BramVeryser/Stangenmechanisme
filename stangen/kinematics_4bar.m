@@ -11,7 +11,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [phi,dphi,ddphi] = kinematics_4bar(LINKS,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts,S,num_check)
+function [phi,dphi,ddphi] = kinematics_4bar(LINKS,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts,S,check_kin)
 
 %initialisation
 AB = LINKS(1);        BD = LINKS(2);    CK = LINKS(3);    Ep = LINKS(4);
@@ -26,6 +26,7 @@ AGx = LINKS(25);      AGy = LINKS(26);
 KM = KLp8 + phi_init(10);
 Lp10N = NO - Lp10O;
 IpLp8 = KLp8 - IpK;
+DK = CK - CD;
 FpH = GH - FpG;
 EpK = CK - CEp;
 
@@ -65,7 +66,7 @@ ddPLp8= zeros(size(t));
 
 
 % fsolve options
-optim_options = optimset('Display','off');
+optim_options = optimset('Display','off','TolFun',1e-16);
 
 % *** loop over positions ***
 Ts = t(2) - t(1);      % timestep
@@ -74,9 +75,9 @@ for k=1:t_size
     
     % *** position analysis ***
     [x, fval, exitflag]=fsolve('loop_closure_eqs',phi_init,optim_options,phi2(k),LINKS);
-    if (exitflag ~= 1)
-        display 'The fsolve exit flag was not 1, probably no convergence!'
+    if (exitflag ~= 1 & exitflag ~= 2 & exitflag ~= 3)
         exitflag
+        display 'The fsolve exit flag was not 1, probably no convergence!'
     end
     
     % save results of fsolve
@@ -192,7 +193,8 @@ ddphi = [ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11
 
 % *** numerical control of solutions ***
 
-if num_check
+if check_kin
+    position_check(phi,LINKS)
     numerical_check(Ts,t,phi,dphi,ddphi)
 end
 
@@ -228,7 +230,6 @@ movie_axes = axis;   %save current axes into movie_axes
 % draw and save movie frame
 for m=1:length(index_vec)
     index = index_vec(m);
-    
     %Define all the points
     B = A + AB * exp(j*phi2(index));
     D = B + BD * exp(j*phi3(index));
@@ -282,7 +283,6 @@ save fourbar_movie Movie
 close(99)
 
 %% *** plot figures ***
-  
     %plot assembly at a certain timestep 
     index = 1; %select 1st timestep
    
@@ -309,7 +309,7 @@ close(99)
     P = O + OP * exp(j*phi11(index));
     
     M = K + KM * exp(j*phi8(index));
-    
+ 
     %Define the loops
     loop1 = [A B D C];
     loop2 = [G Fv F E Ev C];
@@ -337,9 +337,11 @@ close(99)
     figure
     subplot(331)
     plot(t,phi2)
+    xlabel('t [s]')
     ylabel('\phi_2 [rad]')
     subplot(332)
     plot(t,phi3)
+    xlabel('t [s]')
     ylabel('\phi_3 [rad]')
     subplot(333)
     plot(t,phi4)
@@ -348,9 +350,11 @@ close(99)
     
     subplot(334)
     plot(t,dphi2)
+    xlabel('t [s]')
     ylabel('d\phi_2 [rad/s]')
     subplot(335)
     plot(t,dphi3)
+    xlabel('t [s]')
     ylabel('d\phi_3 [rad/s]')
     subplot(336)
     plot(t,dphi4)
@@ -359,9 +363,11 @@ close(99)
     
     subplot(337)
     plot(t,ddphi2)
+    xlabel('t [s]')
     ylabel('dd\phi_2 [rad/s^2]')
     subplot(338)
     plot(t,ddphi3)
+    xlabel('t [s]')
     ylabel('dd\phi_3 [rad/s^2]')
     subplot(339)
     plot(t,ddphi4)
@@ -372,9 +378,11 @@ close(99)
     figure
     subplot(331)
     plot(t,phi5)
+    xlabel('t [s]')
     ylabel('\phi_5 [rad]')
     subplot(332)
     plot(t,phi6)
+    xlabel('t [s]')
     ylabel('\phi_6 [rad]')
     subplot(333)
     plot(t,phi7)
@@ -384,9 +392,11 @@ close(99)
     
     subplot(334)
     plot(t,dphi5)
+    xlabel('t [s]')
     ylabel('d\phi_5 [rad/s]')
     subplot(335)
     plot(t,dphi6)
+    xlabel('t [s]')
     ylabel('d\phi_6 [rad/s]')
     subplot(336)
     plot(t,dphi7)
@@ -395,9 +405,11 @@ close(99)
     
     subplot(337)
     plot(t,ddphi5)
+    xlabel('t [s]')
     ylabel('dd\phi_5 [rad/s^2]')
     subplot(338)
     plot(t,ddphi6)
+    xlabel('t [s]')
     ylabel('dd\phi_6 [rad/s^2]')
     subplot(339)
     plot(t,ddphi7)
@@ -407,49 +419,70 @@ close(99)
     figure
     subplot(331)
     plot(t,phi8)
+    xlabel('t [s]')
     ylabel('\phi_8 [rad]')
     subplot(332)
     plot(t,phi9)
+    xlabel('t [s]')
     ylabel('\phi_9 [rad]')
     subplot(333)
     plot(t,phi10)
-    ylabel('\phi_10 [rad]')
+    ylabel('\phi_1_0 [rad]')
     xlabel('t [s]')
     
     
     subplot(334)
     plot(t,dphi8)
+    xlabel('t [s]')
     ylabel('d\phi_8 [rad/s]')
     subplot(335)
     plot(t,dphi9)
+    xlabel('t [s]')
     ylabel('d\phi_9 [rad/s]')
     subplot(336)
     plot(t,dphi10)
-    ylabel('d\phi_10 [rad/s]')
+    ylabel('d\phi_1_0 [rad/s]')
     xlabel('t [s]')
     
     
     subplot(337)
     plot(t,ddphi8)
     ylabel('dd\phi_8 [rad/s^2]')
+    xlabel('t [s]')
     subplot(338)
     plot(t,ddphi9)
     ylabel('dd\phi_9 [rad/s^2]')
+    xlabel('t [s]')
     subplot(339)
     plot(t,ddphi10)
-    ylabel('dd\phi_10 [rad/s^2]')
+    ylabel('dd\phi_1_0 [rad/s^2]')
     xlabel('t [s]')
 
     figure
-    subplot(311)
+    subplot(321)
+    plot(t,phi11)
+    ylabel('\phi_1_1 [rad]')
+    xlabel('t [s]')
+    subplot(323)
+    plot(t,dphi11)
+    ylabel('d\phi_1_1 [rad/s]')
+    xlabel('t [s]')
+    subplot(325)
+    plot(t,ddphi11)
+    ylabel('dd\phi_1_1 [rad/s^2]')
+    xlabel('t [s]')
+    
+    subplot(322)
     plot(t,PLp8)
-    ylabel('PLp8 [m]')
-    subplot(312)
+    xlabel('t [s]')
+    ylabel('PL_p_8 [m]')
+    subplot(324)
     plot(t,phi9)
-    ylabel('dPLp8 [m/s]')
-    subplot(313)
+    xlabel('t [s]')
+    ylabel('dPL_p_8 [m/s]')
+    subplot(326)
     plot(t,phi10)
-    ylabel('ddPLp8 [m/s^2]')
+    ylabel('ddPL_p_8 [m/s^2]')
     xlabel('t [s]')
 end
 
