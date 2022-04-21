@@ -1,14 +1,23 @@
-function position_check(phi,LINKS)
-%POSITION_CHECK Summary of this function goes here
-%   Detailed explanation goes here
+function position_check(phi,BARS,t)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Bewegingen: 12 bar linkage, Fowler flaps
+%POSITION CHECK
+% 
+%Maarten Overmeire r0797854
+%Bram Veryser r0778645
+%
+%2021-2022
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %initialisation
-AB = LINKS(1);        BD = LINKS(2);    CK = LINKS(3);    Ep = LINKS(4);
-CD = LINKS(5);        CEp = LINKS(6);   EF = LINKS(7);    GH = LINKS(8);
-Fp = LINKS(9);        FpG = LINKS(10);  HI = LINKS(11);   IJ = LINKS(12);
-KM = LINKS(13);       Lp8 = LINKS(14);  Ip = LINKS(15);   KLp8 = LINKS(16);
-IpK = LINKS(17);      JN = LINKS(18);   NO = LINKS(19);   Lp10 = LINKS(20);
-Lp10O = LINKS(21);    OP = LINKS(22);   ACx = LINKS(23);  ACy = LINKS(24);
-AGx = LINKS(25);      AGy = LINKS(26);
+AB = BARS(1);        BD = BARS(2);    CK = BARS(3);    Ep = BARS(4);
+CD = BARS(5);        CEp = BARS(6);   EF = BARS(7);    GH = BARS(8);
+Fp = BARS(9);        FpG = BARS(10);  HI = BARS(11);   IJ = BARS(12);
+KM = BARS(13);       Lp8 = BARS(14);  Ip = BARS(15);   KLp8 = BARS(16);
+IpK = BARS(17);      JN = BARS(18);   NO = BARS(19);   Lp10 = BARS(20);
+Lp10O = BARS(21);    OP = BARS(22);   ACx = BARS(23);  ACy = BARS(24);
+AGx = BARS(25);      AGy = BARS(26);
 
 %extra lengts that where perviously undefined
 Lp10N = NO - Lp10O;
@@ -18,6 +27,7 @@ FpH = GH - FpG;
 EpK = CK - CEp;
 HJ = HI - IJ;
 
+%more initialisation
 phi2 = phi(:,1);
 phi3 = phi(:,2);
 phi4 = phi(:,3);
@@ -56,5 +66,8 @@ for i = 1:size(phi2)
 end
 
 Error = P_1 - P_2;
-
-plot(real(Error))
+figure()
+plot(t,real(Error)) %check the x-difference over time
+xlabel('t [s]')
+ylabel('P_1-P_2 [m]')
+title("Position check")

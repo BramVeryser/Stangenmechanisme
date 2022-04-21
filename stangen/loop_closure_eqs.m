@@ -1,26 +1,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Bewegingen: 12 bar linkage, Fowler flaps
+%LOOP CLOSURE EQUATIONS
+% 
+%Maarten Overmeire r0797854
+%Bram Veryser r0778645
 %
-% Kinematica en werkuigendynamica.
-%
-% Voorbeeldanalyse van een vierstangenmechanisme.
-%
-% Bram Demeulenaere <bram.demeulenaere@mech.kuleuven.be>
-% Maarten De Munck <maarten.demunck@mech.kuleuven.be>
-% Johan Rutgeerts <johan.rutgeerts@mech.kuleuven.be>
-% Wim Meeussen <wim.meeussen@mech.kuleuven.be>
+%2021-2022
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function F=loop_closure_eqs(phi_init,phi2,LINKS)
+function F=loop_closure_eqs(phi_init,phi2,BARS)
 %initialisation
-AB= LINKS(1);     BD= LINKS(2);     CK= LINKS(3);     Ep= LINKS(4);
-CD= LINKS(5);     CEp= LINKS(6);     EF= LINKS(7);     GH= LINKS(8);
-Fp= LINKS(9);    FpG= LINKS(10);    HI= LINKS(11);    IJ= LINKS(12);
-KM= LINKS(13);    Lp8= LINKS(14);   Ip= LINKS(15);   KLp8= LINKS(16);
-IpK= LINKS(17);    JN= LINKS(18);  NO=LINKS(19);     Lp10=LINKS(20);
-Lp10O=LINKS(21);    OP=LINKS(22);    ACx=LINKS(23);    ACy=LINKS(24);
-AGx=LINKS(25);    AGy=LINKS(26);
+AB= BARS(1);     BD= BARS(2);     CK= BARS(3);     Ep= BARS(4);
+CD= BARS(5);     CEp= BARS(6);     EF= BARS(7);     GH= BARS(8);
+Fp= BARS(9);    FpG= BARS(10);    HI= BARS(11);    IJ= BARS(12);
+KM= BARS(13);    Lp8= BARS(14);   Ip= BARS(15);   KLp8= BARS(16);
+IpK= BARS(17);    JN= BARS(18);  NO=BARS(19);     Lp10=BARS(20);
+Lp10O=BARS(21);    OP=BARS(22);    ACx=BARS(23);    ACy=BARS(24);
+AGx=BARS(25);    AGy=BARS(26);
 
 %extra lengts that where perviously undefined
 Lp10N = NO - Lp10O;

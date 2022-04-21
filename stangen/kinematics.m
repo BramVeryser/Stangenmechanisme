@@ -1,26 +1,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Bewegingen: 12 bar linkage, Fowler flaps
+%KINEMATICS
+% 
+%Maarten Overmeire r0797854
+%Bram Veryser r0778645
 %
-% Kinematica en werkuigendynamica.
-%
-% Voorbeeldanalyse van een vierstangenmechanisme.
-%
-% Bram Demeulenaere <bram.demeulenaere@mech.kuleuven.be>
-% Maarten De Munck <maarten.demunck@mech.kuleuven.be>
-% Johan Rutgeerts <johan.rutgeerts@mech.kuleuven.be>
-% Wim Meeussen <wim.meeussen@mech.kuleuven.be>
+%2021-2022
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [phi,dphi,ddphi] = kinematics_4bar(LINKS,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,Ts,S,check_kin)
+function [phi,dphi,ddphi] = kinematics(BARS,phi2,dphi2,ddphi2,phi_init,t,fig_kin_4bar,S,check_kin,index)
 
 %initialisation
-AB = LINKS(1);        BD = LINKS(2);    CK = LINKS(3);    Ep = LINKS(4);
-CD = LINKS(5);        CEp = LINKS(6);   EF = LINKS(7);    GH = LINKS(8);
-Fp = LINKS(9);        FpG = LINKS(10);  HI = LINKS(11);   IJ = LINKS(12);
-KM = LINKS(13);       Lp8 = LINKS(14);  Ip = LINKS(15);   KLp8 = LINKS(16);
-IpK = LINKS(17);      JN = LINKS(18);   NO = LINKS(19);   Lp10 = LINKS(20);
-Lp10O = LINKS(21);    OP = LINKS(22);   ACx = LINKS(23);  ACy = LINKS(24);
-AGx = LINKS(25);      AGy = LINKS(26);
+AB = BARS(1);        BD = BARS(2);    CK = BARS(3);    Ep = BARS(4);
+CD = BARS(5);        CEp = BARS(6);   EF = BARS(7);    GH = BARS(8);
+Fp = BARS(9);        FpG = BARS(10);  HI = BARS(11);   IJ = BARS(12);
+KM = BARS(13);       Lp8 = BARS(14);  Ip = BARS(15);   KLp8 = BARS(16);
+IpK = BARS(17);      JN = BARS(18);   NO = BARS(19);   Lp10 = BARS(20);
+Lp10O = BARS(21);    OP = BARS(22);   ACx = BARS(23);  ACy = BARS(24);
+AGx = BARS(25);      AGy = BARS(26);
 
 %extra lengts that where perviously undefined
 KM = KLp8 + phi_init(10);
@@ -30,7 +28,7 @@ DK = CK - CD;
 FpH = GH - FpG;
 EpK = CK - CEp;
 
-% allocation of the result vectors 
+%allocation of the result vectors 
 phi3 = zeros(size(t));
 phi4 = zeros(size(t));
 phi5 = zeros(size(t));
@@ -66,7 +64,7 @@ ddPLp8= zeros(size(t));
 
 
 % fsolve options
-optim_options = optimset('Display','off','TolFun',1e-16);
+optim_options = optimset('Display','off','TolFun',1e-16); %TolFun,1e-16 increases the precision of fslove
 
 % *** loop over positions ***
 Ts = t(2) - t(1);      % timestep
@@ -74,11 +72,14 @@ t_size = size(t,1);    % number of simulation steps
 for k=1:t_size
     
     % *** position analysis ***
-    [x, fval, exitflag]=fsolve('loop_closure_eqs',phi_init,optim_options,phi2(k),LINKS);
-    if (exitflag ~= 1 & exitflag ~= 2 & exitflag ~= 3)
+    [x, fval, exitflag]=fsolve('loop_closure_eqs',phi_init,optim_options,phi2(k),BARS);
+    if (exitflag ~= 1 & exitflag ~= 2 & exitflag ~= 3)                                  %exitflags: 1) Equation solved. First-order optimality is small. 
         exitflag
         display 'The fsolve exit flag was not 1, probably no convergence!'
     end
+    %exitflags: 1) Equation solved. First-order optimality is small. 
+    %           2) Equation solved. Change in x smaller than the specified tolerance, or Jacobian at x is undefined.
+    %           3) Equation solved. Change in residual smaller than the specified tolerance.
     
     % save results of fsolve
     phi3(k)=x(1);
@@ -151,7 +152,6 @@ for k=1:t_size
         -(+Ep*cos(phi4(k)-pi/2)*dphi4(k)^2-EpK*cos(phi4(k))*dphi4(k)^2+EF*cos(phi5(k))*dphi5(k)^2+FpH*cos(phi6(k))*dphi6(k)^2-Fp*cos(phi6(k)-pi/2)*dphi6(k)^2+HI*cos(phi7(k))*dphi7(k)^2-Ip*cos(phi8(k)-pi/2)*dphi8(k)^2-IpK*cos(phi8(k))*dphi8(k)^2);
         -(+Ep*sin(phi4(k)-pi/2)*dphi4(k)^2-EpK*sin(phi4(k))*dphi4(k)^2+EF*sin(phi5(k))*dphi5(k)^2+FpH*sin(phi6(k))*dphi6(k)^2-Fp*sin(phi6(k)-pi/2)*dphi6(k)^2+HI*sin(phi7(k))*dphi7(k)^2-Ip*sin(phi8(k)-pi/2)*dphi8(k)^2-IpK*sin(phi8(k))*dphi8(k)^2)];
     
-%     rcond(A)
     x = A\B;
     % save results
     ddphi3(k)=x(1);
@@ -191,10 +191,10 @@ phi = [phi2,phi3,phi4,phi5,phi6,phi7,phi8,phi9,phi10,phi11,phi12,PLp8];
 dphi = [dphi2,dphi3,dphi4,dphi5,dphi6,dphi7,dphi8,dphi9,dphi10,dphi11,dphi12,dPLp8];
 ddphi = [ddphi2,ddphi3,ddphi4,ddphi5,ddphi6,ddphi7,ddphi8,ddphi9,ddphi10,ddphi11,ddphi12,ddPLp8];
 
-% *** numerical control of solutions ***
+% *** Check of the solutions ***
 
 if check_kin
-    position_check(phi,LINKS)
+    position_check(phi,BARS,t)
     numerical_check(Ts,t,phi,dphi,ddphi)
 end
 
@@ -212,9 +212,6 @@ delta = floor(t_size/frames); % time between frames
 index_vec = [1:delta:t_size]';
 
 % Create a window large enough for the whole mechanisme in all positions, to prevent scrolling.
-% This is done by plotting a diagonal from (x_left, y_bottom) to (x_right, y_top), setting the
-% axes equal and saving the axes into "movie_axes", so that "movie_axes" can be used for further
-% plots.
 x_left = -40*S;
 y_bottom = -20*S;
 x_right = 5*S;
@@ -229,30 +226,30 @@ movie_axes = axis;   %save current axes into movie_axes
 
 % draw and save movie frame
 for m=1:length(index_vec)
-    index = index_vec(m);
+    i = index_vec(m);
     %Define all the points
-    B = A + AB * exp(j*phi2(index));
-    D = B + BD * exp(j*phi3(index));
+    B = A + AB * exp(j*phi2(i));
+    D = B + BD * exp(j*phi3(i));
     
-    Fv = G + FpG * exp(j*phi6(index));
-    F = Fv + Fp * exp(j*(phi6(index)-pi/2));
-    E = F - EF * exp(j*phi5(index));
-    Ev = E - Ep * exp(j*(phi4(index)-pi/2));
+    Fv = G + FpG * exp(j*phi6(i));
+    F = Fv + Fp * exp(j*(phi6(i)-pi/2));
+    E = F - EF * exp(j*phi5(i));
+    Ev = E - Ep * exp(j*(phi4(i)-pi/2));
     
-    K = Ev + (CK-CEp) * exp(j*phi4(index));
-    Iv = K + IpK * exp(j*phi8(index));
-    I = Iv + Ip * exp(j*(phi8(index)-pi/2));
-    H = Fv + (GH-FpG) * exp(j*phi6(index));
-    Lv8 = K + KLp8 * exp(j*phi8(index));
-    L = Lv8 + Lp8 * exp(j*(phi8(index)-pi/2));
-    Lv10 = L - Lp10 * exp(j*(phi10(index)-pi/2));
+    K = Ev + (CK-CEp) * exp(j*phi4(i));
+    Iv = K + IpK * exp(j*phi8(i));
+    I = Iv + Ip * exp(j*(phi8(i)-pi/2));
+    H = Fv + (GH-FpG) * exp(j*phi6(i));
+    Lv8 = K + KLp8 * exp(j*phi8(i));
+    L = Lv8 + Lp8 * exp(j*(phi8(i)-pi/2));
+    Lv10 = L - Lp10 * exp(j*(phi10(i)-pi/2));
     
-    J = H + (HI - IJ) * exp(j*phi7(index));
-    N = J + JN * exp(j*phi9(index));
-    O = N + NO * exp(j*phi10(index));
-    P = O + OP * exp(j*phi11(index));
+    J = H + (HI - IJ) * exp(j*phi7(i));
+    N = J + JN * exp(j*phi9(i));
+    O = N + NO * exp(j*phi10(i));
+    P = O + OP * exp(j*phi11(i));
     
-    M = K + KM * exp(j*phi8(index));
+    M = K + KM * exp(j*phi8(i));
     
     %Define the loops
     loop1 = [A B D C];
@@ -283,8 +280,7 @@ save fourbar_movie Movie
 close(99)
 
 %% *** plot figures ***
-    %plot assembly at a certain timestep 
-    index = 1; %select 1st timestep
+    %plot assembly at a certain timestep(can be changed in start)
    
     %Define all the points
     B = A + AB * exp(j*phi2(index));
