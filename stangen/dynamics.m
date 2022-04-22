@@ -673,13 +673,13 @@ if fig_dyn_4bar
     axis tight    
     subplot(223)
     plot(F_P_p.*cos(phi8-pi/2),F_P_p.*sin(phi8-pi/2)),grid
-    xlabel('F_P_p [N]')
-    ylabel('F_P_p [N]')
+    xlabel('F_P_p_x (Bar 8 and 12) [N]')
+    ylabel('F_P_p_y (Bar 8 and 12) [N]')
     axis tight
     subplot(224)
     plot(F_P_x,F_P_y),grid
-    xlabel('F_P_x [N]')
-    ylabel('F_P_y [N]')
+    xlabel('F_P_x (Bar 8 and 11) [N]')
+    ylabel('F_P_y (Bar 8 and 11) [N]')
     axis tight
     
     figure
